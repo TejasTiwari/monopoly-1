@@ -1,5 +1,5 @@
-from building import Building
-from util import *
+from .building import Building
+from .util import *
 
 
 class Player(object):

@@ -1,12 +1,12 @@
-from player import Player
-from game_state_type import GameStateType
-from card_deck import CardDeck
-from board import Board
-from move_result import MoveResult
-from move_result_enum import MoveResultType
-from game_change_listner import GameChangeListner
-from land import LandType
-from building import *
+from .player import Player
+from .game_state_type import GameStateType
+from .card_deck import CardDeck
+from .board import Board
+from .move_result import MoveResult
+from .move_result_enum import MoveResultType
+from .game_change_listner import GameChangeListner
+from .land import LandType
+from .building import *
 import uuid
 
 
@@ -20,7 +20,7 @@ class Game(object):
                               "players.")
             return
         self._players = []
-        for i in xrange(player_num):
+        for i in range(player_num):
             self._players.append(Player(i))
         self._game_state = GameStateType.WAIT_FOR_ROLL
         self._card_deck = CardDeck()
@@ -95,7 +95,7 @@ class Game(object):
                 val = construction_land.get_rent()
                 return MoveResult(result_type, val, land)
         elif land_type == LandType.INFRA:
-            print "debug63"
+            print("debug63")
             infra_land = land.get_content()
             if infra_land.get_owner_index() is None:
                 if self._is_purchase_affordable(infra_land) is False:
@@ -114,22 +114,22 @@ class Game(object):
                 return MoveResult(result_type, val, land)
 
         elif land_type == LandType.START:
-            print "debug75"
+            print("debug75")
             result_type = MoveResultType.REWARD
             val = START_REWARD
             return MoveResult(result_type, val, land)
         elif land_type == LandType.PARKING:
-            print "debug80"
+            print("debug80")
             result_type = MoveResultType.NOTHING
             val = 0
             return MoveResult(result_type, val, land)
         elif land_type == LandType.JAIL:
-            print "debug85"
+            print("debug85")
             result_type = MoveResultType.STOP_ROUND
             val = 1
             return MoveResult(result_type, val, land)
         elif land_type == LandType.CHANCE:
-            print "debug landtype chance"
+            print("debug landtype chance")
             card = self._card_deck.draw()
             if card.get_money_deduction() > 0:
                 result_type = MoveResultType.PAYMENT
@@ -141,13 +141,13 @@ class Game(object):
             ret.set_msg(" Chance Card: " + str(card))
             return ret
         else:
-            print "Error, the land is", land_type
+            print(("Error, the land is", land_type))
             self.notify_error("Internal error, unknow land type")
             return None
 
     def _has_enough_money(self, construction_land):
-        print 'price1:', self.get_current_player().get_money()
-        print 'construciton price:', construction_land.get_price()
+        print(('price1:', self.get_current_player().get_money()))
+        print(('construciton price:', construction_land.get_price()))
         return self.get_current_player().get_money() > \
                construction_land.get_price()
 
@@ -157,7 +157,7 @@ class Game(object):
         val = move_result.get_value()
         result = True
         if move_result_type == MoveResultType.BUY_LAND_OPTION:
-            print 'debug99'
+            print('debug99')
             purchasable_land = move_result.get_land().get_content()
             if move_result.yes is True:
                 if self._has_enough_money(purchasable_land) is False:
@@ -205,7 +205,7 @@ class Game(object):
                                           "the current player need to make "
                                           "payment")
                         result = False
-                    print 'owner index is: ', land.get_owner_index()
+                    print(('owner index is: ', land.get_owner_index()))
                     rewarded_player = self.get_player(land.get_owner_index())
                     rewarded_player.add_money(val)
 
@@ -262,7 +262,7 @@ class Game(object):
         if land_dest is None:
             # print 'debug262, the move result is None'
             return None
-        print "debug116", land_dest
+        print(("debug116", land_dest))
         self._roll_to_next_game_state()
         move_result = self._get_move_result(land_dest)
         return steps, move_result
@@ -288,16 +288,16 @@ class Game(object):
             # print 'debug188'
             # assert decision.yes is not None
             if decision.yes is None:
-                print 'error'
+                print('error')
                 self.notify_error("Error: You must make a decision when you "
                                   "need to make a decsion")
                 return None
             make_decision_success = self._apply_result(decision)
-            print 'debgu237: ', make_decision_success
+            print(('debgu237: ', make_decision_success))
             ret = MoveResult(decision.get_move_result_type(),
                              decision.get_value(), decision.get_land())
         if make_decision_success:
-            print 'decision made success'
+            print('decision made success')
             self._change_player()
             self._roll_to_next_game_state()
             return ret
@@ -311,7 +311,7 @@ class Game(object):
     # this will return a 40 num array, each indicate the owner of each land
     def get_land_owners(self):
         ret = []
-        for i in xrange(self._board.get_grid_num()):
+        for i in range(self._board.get_grid_num()):
             land = self._board.get_land(i)
             owner = land.get_content().get_owner_index()
             ret.append(owner)
@@ -403,35 +403,35 @@ class InternalLogHandler(MonopolyHandler):
         self.game = g
 
     def on_error(self, err_msg):
-        print '[Error] [Game ID: {0}]'.format(self.game.get_game_id()) + err_msg
+        print(('[Error] [Game ID: {0}]'.format(self.game.get_game_id()) + err_msg))
 
     def on_rolled(self):
-        print '[Info] [Game ID: {0}]current player {1} is rolling'.format(
-            self.game.get_game_id(), self.game.get_current_player().get_index())
+        print(('[Info] [Game ID: {0}]current player {1} is rolling'.format(
+            self.game.get_game_id(), self.game.get_current_player().get_index())))
 
     def on_decision_made(self):
-        print '[Info] [Game ID: {0} ]Decision is made'.format(
-            self.game.get_game_id())
+        print(('[Info] [Game ID: {0} ]Decision is made'.format(
+            self.game.get_game_id())))
 
     def on_new_game(self):
-        print '[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
-              "Game Started"
+        print(('[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
+              "Game Started"))
 
     def on_game_ended(self):
-        print '[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
-              "Game Ended"
-        print '[Info] The player {0} has go bankruptcy'.format(
-            self.game.get_current_player().get_index())
+        print(('[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
+              "Game Ended"))
+        print(('[Info] The player {0} has go bankruptcy'.format(
+            self.game.get_current_player().get_index())))
 
     def on_player_changed(self):
-        print '[Info] [Game Id: {0}] '.format(self.game.get_game_id()) + \
+        print(('[Info] [Game Id: {0}] '.format(self.game.get_game_id()) + \
               "Player changed to : {0}".format(
-                  self.game.get_current_player().get_index())
+                  self.game.get_current_player().get_index())))
 
     def on_result_applied(self):
         pass
 
     def on_pass_start(self):
-        print '[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
+        print(('[Info] [Game ID: {0}] '.format(self.game.get_game_id()) + \
               "Player {0} just passed the start point".format(
-                  self.game.get_current_player().get_index())
+                  self.game.get_current_player().get_index())))

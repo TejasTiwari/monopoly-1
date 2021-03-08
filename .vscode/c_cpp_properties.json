@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/hardik/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/hardik/catkin_ws/src/beginner_tutorials/include/**",
+                "/home/hardik/catkin_ws/src/mavros/libmavconn/include/**",
+                "/home/hardik/catkin_ws/src/mavros/mavros/include/**",
+                "/home/hardik/catkin_ws/src/mavros/mavros_msgs/include/**",
+                "/home/hardik/catkin_ws/src/ros_essentials_cpp/include/**",
+                "/home/hardik/catkin_ws/src/mavros/test_mavros/include/**",
+                "/home/hardik/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+                "/home/hardik/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}

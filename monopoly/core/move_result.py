@@ -1,4 +1,4 @@
-from move_result_enum import *
+from .move_result_enum import *
 
 
 class MoveResult(object):

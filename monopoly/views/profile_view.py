@@ -63,10 +63,10 @@ class ProfileView(View):
             form = ProfileForm(request.POST, request.FILES, instance=self.profile_info)
 
             if form.is_valid():
-                print "valid"
+                print("valid")
                 self.profile_info.save()
             else:
-                print form.errors
+                print((form.errors))
 
         res = {
             "user": self.profile_user,

@@ -12,7 +12,7 @@ class Session:
 
     def register(self, conf):
         error_message = "Error: "
-        for (key, value) in conf.items():
+        for (key, value) in list(conf.items()):
             if key == "request": continue
             if not value or len(value) == 0:
                 error_message += key + " can't be empty."
@@ -45,6 +45,7 @@ class Session:
         """.format(host=request.get_host(),
                 path=reverse('confirm', args=(user.username, token)))
 
+    # NOTE: The below address needs to be changed
         send_mail(subject="Verify your email address",
                 message= email_body,
                 from_email="ztong@andrew.cmu.edu",

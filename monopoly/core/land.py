@@ -1,4 +1,4 @@
-from building import *
+from .building import *
 
 
 class Land(object):
@@ -116,7 +116,7 @@ class ConstructionLand(object):
             return False
         else:
             # error
-            print 'Fatal error when adding properties'
+            print('Fatal error when adding properties')
             assert False
 
     def get_rent(self):
@@ -130,7 +130,7 @@ class ConstructionLand(object):
                    self._building_num *
                    HOUSE_CONSTRUCTION_COST) / \
                   RATIO_RENT_TO_PRICE_FOR_HOUSE
-        print 'debug114, rent is', ret
+        print('debug114, rent is', ret)
         return ret
 
 

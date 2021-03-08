@@ -8,7 +8,7 @@ class JoinView(View):
     template_name = 'join_view.html'
 
     def get(self, request, *args, **kwargs):
-        print request.path
+        print((request.path))
         user = request.user
         host_name = kwargs.get('host_name', user.username)
 

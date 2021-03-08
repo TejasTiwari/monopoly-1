@@ -4,7 +4,7 @@ from channels import Group
 # Connected to websocket.connect
 def ws_add(message):
     # Accept the connection
-    print 'ws_add invoked'
+    print('ws_add invoked')
     message.reply_channel.send({"accept": True})
 
     # Add to the chat group
