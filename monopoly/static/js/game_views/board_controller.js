@@ -8,6 +8,11 @@ class BoardController {
 
         this.board = new Board();
         this.players = [];
+
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        this.squareTiles = [];
+        this.currentTile = null;
     }
 
     drawBoard(callback) {
@@ -261,6 +266,9 @@ class BoardController {
 
                 square.rotation.x = -90 * Math.PI / 180;
 
+                if (row === 0 || row === 10 || col === 0 || col === 10) {
+                    this.squareTiles.push(square);
+                }
                 this.scene.add(square);
             }
         }
@@ -281,6 +289,13 @@ class BoardController {
 
     onAnimationFrame() {
         requestAnimationFrame(() => this.onAnimationFrame());
+        
+        // update the picking ray with the camera and mouse position
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+
+        // calculate objects intersecting the picking ray
+        const intersects = this.raycaster.intersectObjects(this.squareTiles);
+        this.currentTile = intersects[0] ?? null;
 
         this.cameraController.update();
 

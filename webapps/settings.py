@@ -147,11 +147,11 @@ STATIC_URL = '/static/'
 #EMAIL_HOST_PASSWORD = config.get('Email', 'Password')
 
 # NOTE: The below values have no significance and have been taken from sample file. They need to be changed during production.
-EMAIL_HOST = "smtp.andrew.cmu.edu"
-EMAIL_PORT = 465
-EMAIL_HOST_USER = "Andrew ID"
-EMAIL_HOST_PASSWORD = "Your Password"
-EMAIL_USE_SSL = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "divyanshudels@gmail.com"
+EMAIL_HOST_PASSWORD = "KarbonnA9+"
+EMAIL_USE_TLS= True
 
 print(('Email host:port = {host}:{port}, user={user}'.format(
     host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER)))
