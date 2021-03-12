@@ -8,6 +8,8 @@ class GameView {
         this.audioManager.play("background");
 
         this.gameInProcess = true;
+        this.message=null
+        // const trade = require('../game_views/')
     }
 
     initComponents() {
@@ -48,6 +50,8 @@ class GameView {
         this.$modalTitle = document.getElementById("modal-title");
         this.$modalSubTitle = document.getElementById("modal-subtitle");
 
+         document.getElementById('trade').style.display = 'none'
+
         this.showModal(null, "Welcome to Monopoly", "", "Loading game resources...", []);
         this.initBoard();
     }
@@ -74,6 +78,8 @@ class GameView {
         this.socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
             this.handleStatusChange(message);
+            this.message=message
+            console.log(message)
         };
     }
 
@@ -96,11 +102,13 @@ class GameView {
             "cancel_decision": this.handleCancel,
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
+            "trade":this.handleTrade,
         };
 
         if (!this.gameInProcess) return;
 
         messageHandlers[message.action].bind(this)(message);
+        // console.log(this)
     }
 
     /*
@@ -191,6 +199,9 @@ class GameView {
 
                     onDiceRolled();
                 }
+            },{
+                text: "Trade",
+                callback: this.handleTrade.bind(this)
             }];
         this.showModal(nextPlayer, title, "", this.diceMessage, button);
     }
@@ -328,7 +339,14 @@ class GameView {
         window.location = `http://${window.location.host}/monopoly/join`;
     }
 
+    handleTrade = function(message){
+    document.getElementById('trade').style.display = 'inherit';
+    document.getElementsByClassName('card-content-container')[0].style.display = 'none';
 
+    
+   
+
+}
     async handleRollRes(message) {
         let currPlayer = message.curr_player;
         let nextPlayer = message.next_player;
@@ -355,12 +373,16 @@ class GameView {
         }
 
         if (message.is_option === "true") {
+            console.log('woeking')
             const buttons = (this.myPlayerIndex === currPlayer) ? [{
                 text: "Buy",
                 callback: this.confirmDecision.bind(this)
             }, {
                 text: "No",
                 callback: this.cancelDecision.bind(this)
+            }, {
+                text: "Trade",
+                callback: this.handleTrade.bind(this)
             }] : [];
 
             this.showModal(currPlayer, title, landname, this.players[currPlayer].userName + eventMsg, buttons);
@@ -451,6 +473,13 @@ class GameView {
         await this.hideModal(true);
     }
 
+    async trade (){
+        this.socket.send(JSON.stringify({
+            action: "trade",
+            hostname: this.hostName,
+        }));
+
+    }
     async cancelDecision() {
         this.socket.send(JSON.stringify({
             action: "cancel_decision",
