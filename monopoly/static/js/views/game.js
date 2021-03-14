@@ -78,7 +78,7 @@ class GameView {
         this.socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
             this.handleStatusChange(message);
-            this.message=message
+            // this.message=message
             console.log(message)
         };
     }
@@ -343,6 +343,8 @@ class GameView {
     document.getElementById('trade').style.display = 'inherit';
     document.getElementsByClassName('card-content-container')[0].style.display = 'none';
 
+    let initiater = message.curr_player
+    // let recipient = 
     
    
 
