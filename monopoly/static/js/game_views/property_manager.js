@@ -28,6 +28,22 @@ class PropertyManager {
 
         this.scene.add(square);
     }
+    removeLand(pos, tileId, playerIndex) {
+        const material = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load(`/static/images/player_${playerIndex}_mark.png`),
+            transparent: true
+        });
+        let square = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+
+        const side = Board.tileIdToSide(tileId);
+        let x = pos[0], y = 0.01, z = pos[2];
+
+        square.scale.set(1.5, 1.5, 1.5);
+        square.position.set(x, y, z);
+        square.rotation.x = -Math.PI / 2.0;
+        square.rotation.z = -Math.PI / 2.0 * side;
+        this.scene.remove(square);
+    }
 
     buildHouse(pos, tileId) {
         let loader = new THREE.ObjectLoader();
