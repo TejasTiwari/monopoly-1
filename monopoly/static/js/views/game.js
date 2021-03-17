@@ -182,6 +182,8 @@ class GameView {
             $currentUserGroup.classList.remove("active");
         }
 
+        console.log(this.currentPlayer, nextPlayer, this.myPlayerIndex)
+
         let $nextUserGroup = document.getElementById(`user-group-${nextPlayer}`);
         $nextUserGroup.classList.add("active");
 
@@ -198,20 +200,22 @@ class GameView {
         //         // message.currPlayer and message.playerSelected are trading
         //     }      
         // };
-     
-       console.log('ok', this)
-      if(this.currPlayer === nextPlayer){ 
-          setTimeout(()=>{
-           this.players = this.players.filter((e,index)=>index!==nextPlayer)
-           if( this.currentPlayer ===this.players.length){
-               this.currentPlayer = 0;
-            }
-            this.changePlayer(this.currPlayer,onDiceRolled)
-            
-            this.socket.close()
-            window.location = `http://${window.location.host}/monopoly/join`;
 
-    },4000)}
+        setTimeout(() => {
+            this.players = this.players.filter((player, index) => {
+                return index !== this.currentPlayer;
+            });
+
+            console.log(this.players, nextPlayer);
+
+            nextPlayer = this.currentPlayer % this.players.length;
+
+            // Update backend/players/whatever.
+            this.changePlayer(nextPlayer, onDiceRolled);
+
+            return window.location.href = `http://${window.location.host}/monopoly/join`;
+        }, 1000);
+
         // role dice
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
