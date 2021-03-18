@@ -3,9 +3,9 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from channels.auth import http_session_user, channel_session_user, \
     channel_session_user_from_http
-from monopoly.models import Profile
+from monopoly.models.profile import Profile
 from django.contrib.auth.models import User
-from .core.game import *
+from monopoly.core.game import *
 
 import json
 from monopoly.ws_handlers.game_handler import *
@@ -95,14 +95,17 @@ def ws_message(message):
         handle_cancel_decision(hostname, games)
     if action == "chat":
         handle_chat(hostname, msg)
+    if action == "trade":
+        handle_trade(hostname, msg)
     if action == "end_game":
         handle_end_game(hostname, games)
-        del games[hostname]
-        del rooms[hostname]
 
 
 # @login_required
 def ws_disconnect(message):
+    path = message.content['path']
+    fields = path.split('/')
+    hostname = fields[-1]
     Group('5').discard(message.reply_channel)
 
 
@@ -149,8 +152,11 @@ def add_player(room_name, player_name):
     if room_name not in rooms:
         rooms[room_name] = set()
         rooms[room_name].add(room_name)
+    
+    if player_name in rooms[room_name]:
+        return True
 
-    if len(rooms[room_name]) >= 4:
+    if len(rooms[room_name]) >= 2:
         return False
 
     rooms[room_name].add(player_name)
@@ -174,3 +180,4 @@ def handle_start(hostname):
     })
     print(len(games))
     print("start finish")
+    
