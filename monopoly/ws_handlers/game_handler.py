@@ -144,31 +144,23 @@ def handle_roll(hostname, games, changehandlers):
 def handle_trade(hostname, msg, games):
     game = games[hostname]
     players = game.get_players()
-
-    """
-    # getting players cash
-    current_cash = []
-    for player in players:
-        current_cash.append(player.get_money())
-
-    # getting assets details
-    assets = []
-    for player in players:
-        assets.append(player.get_asset())
-    """
     
     players_info = []
     for player in players:
         players_info.append({
             "index" : player.get_index(),
             "cash" : player.get_money(),
-            "assets" : player.get_asset()
+            "asset" : player.get_asset(),
+            "properties" : player.get_properties
         })
 
     #sender = msg["from"]
     Group(hostname).send({
         "text" : build_trade_details_msg(hostname, players_info)
     }) 
+    print({
+        "text" : build_trade_details_msg(hostname, players_info)
+    })
 
 
 def handle_end_game(hostname, games):
@@ -245,8 +237,6 @@ def handle_chat(hostname, msg):
 def build_trade_details_msg(hostname, players):
     context = {
         "action" : "trade_res",
-        #"cash" : cash,
-        #"assets" : assets,
         "players_info" : players
     }
     return json.dumps(context)
