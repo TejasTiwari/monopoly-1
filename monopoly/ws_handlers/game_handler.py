@@ -159,11 +159,15 @@ def handle_trade(hostname, msg, games):
             "index" : player.get_index(),
             "cash" : player.get_money(),
             "asset" : player.get_asset(),
+<<<<<<< Updated upstream
 <<<<<<< HEAD
             "properties" : list(player.get_properties())
 =======
             "owners" : list(game.get_land_owners())
 >>>>>>> b9afaa6296082ee103c43b8d98fa86099840014d
+=======
+            "properties" : list(player.get_properties())
+>>>>>>> Stashed changes
         })
 
     #sender = msg["from"]
@@ -269,8 +273,11 @@ def build_trade_details_msg(hostname, players):
 <<<<<<< HEAD
         #"cash" : cash,
         #"assets" : assets,
+<<<<<<< Updated upstream
 =======
 >>>>>>> b9afaa6296082ee103c43b8d98fa86099840014d
+=======
+>>>>>>> Stashed changes
         "players_info" : players
     }
     return json.dumps(context)
