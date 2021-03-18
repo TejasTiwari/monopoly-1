@@ -48,7 +48,7 @@ class Session:
     # NOTE: The below address needs to be changed
         send_mail(subject="Verify your email address",
                 message= email_body,
-                from_email="ztong@andrew.cmu.edu",
+                from_email="ccbitspilani2021@gmail.com",
                 recipient_list=[user.email])
 
         return True, None

@@ -145,6 +145,7 @@ def handle_trade(hostname, msg, games):
     game = games[hostname]
     players = game.get_players()
 
+    """
     # getting players cash
     current_cash = []
     for player in players:
@@ -154,10 +155,19 @@ def handle_trade(hostname, msg, games):
     assets = []
     for player in players:
         assets.append(player.get_asset())
+    """
+    
+    players_info = []
+    for player in players:
+        players_info.append({
+            "index" : player.get_index(),
+            "cash" : player.get_money(),
+            "assets" : player.get_asset()
+        })
 
     #sender = msg["from"]
     Group(hostname).send({
-        "text" : build_trade_details_msg(hostname, msg, players, current_cash, assets)
+        "text" : build_trade_details_msg(hostname, players_info)
     }) 
 
 
@@ -232,13 +242,12 @@ def handle_chat(hostname, msg):
     })
 
 
-def build_trade_details_msg(hostname, msg, players, cash, assets):
+def build_trade_details_msg(hostname, players):
     context = {
-        "hostname" : hostname,
-        "msg" : msg,
-        "players" : players,
-        "cash" : cash,
-        "assets" : assets
+        "action" : "trade_res",
+        #"cash" : cash,
+        #"assets" : assets,
+        "players_info" : players
     }
     return json.dumps(context)
 
