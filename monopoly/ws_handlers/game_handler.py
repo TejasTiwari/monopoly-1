@@ -141,7 +141,7 @@ def handle_roll(hostname, games, changehandlers):
     })
 
 # trade handling function
-def handle_trade(hostname, msg):
+def handle_trade(hostname, msg, games):
     game = games[hostname]
     players = game.get_players()
 
