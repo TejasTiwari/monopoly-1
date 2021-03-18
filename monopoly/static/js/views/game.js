@@ -416,9 +416,10 @@ class GameView {
         let table2 = document.createElement("table");
         table1.style.display = "inline-block";
         table1.style.display = "inline-block";
-        let table = document.getElementById("table");
-        table.append(table1);
-        table.append(table2);
+        let table_1 = document.getElementById("trade-leftp-property");
+        let table_2 = document.getElementById("trade-rightp-property");
+        table_1.append(table1);
+        table_2.append(table2);
 
         for (i = 0; i < propertyCurrPlayer.length; i++) {
             let tr = document.createElement("tr");
