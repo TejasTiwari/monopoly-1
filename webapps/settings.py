@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'monopoly'
+    'monopoly',
+    'social_django',
 ]
 
 CHANNEL_LAYERS = {
