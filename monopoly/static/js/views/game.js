@@ -353,6 +353,7 @@ class GameView {
     }
 
     handleTrade = function (message) {
+        console.log(message)
         document.getElementById('trade').style.display = 'inherit';
         document.getElementsByClassName('card-content-container')[0].style.display = 'none';
         document.getElementById('accepttradebutton').style.display = 'none';
@@ -566,7 +567,7 @@ class GameView {
     }
 
     async trade (){
-        console.log(this)
+        // console.log(this)
         this.socket.send(JSON.stringify({
             action: "trade",
             hostname: this.hostName,
