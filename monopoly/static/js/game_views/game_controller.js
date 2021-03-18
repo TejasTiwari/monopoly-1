@@ -33,6 +33,11 @@ class GameController {
             this.boardController.addProperty(type, tileId);
         }
     }
+    removeProperty(type, tileId, playerIndex) {
+        
+            this.boardController.removeLandMark(playerIndex, tileId);
+       
+    }
 
     resizeBoard() {
         this.boardController.resize();

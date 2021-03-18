@@ -144,22 +144,22 @@ def handle_roll(hostname, games, changehandlers):
 def handle_trade(hostname, msg):
     game = games[hostname]
     players = game.get_players()
-    
+
     # getting players cash
     current_cash = []
     for player in players:
         current_cash.append(player.get_money())
-        
+
     # getting assets details
     assets = []
     for player in players:
         assets.append(player.get_asset())
-    
+
     sender = msg["from"]
     Group(hostname).send({
         "text" : build_trade_details_msg(hostname, msg, players, current_cash, assets)
     }) 
-    
+
 
 def handle_end_game(hostname, games):
     game = games[hostname]
@@ -174,7 +174,7 @@ def handle_end_game(hostname, games):
     })
     del games[hostname]
     del rooms[hostname]
-    
+
 
 
 def handle_confirm_decision(hostname, games):

@@ -131,6 +131,23 @@ class BoardController {
             total: 1
         }), tileId, playerIndex);
     }
+    removeLandMark(playerIndex, tileId) {
+        let tileInfo = this.board.getTileInfo(tileId);
+        this.board.updateTileInfo(tileId, {
+            type: BoardController.MODEL_PROPERTY,
+            options: {
+                loadedHouseJson: this.houseModelJson,
+                loadedHotelJson: this.hotelModelJson,
+                scene: this.scene
+            }
+        });
+
+        tileInfo.propertyManager.removeLand(this.boardToWorld({
+            tileId: tileId,
+            type: BoardController.MODEL_PROPERTY,
+            total: 1
+        }), tileId, playerIndex);
+    }
 
     initEngine() {
         let viewWidth = this.containerEl.offsetWidth;
