@@ -220,10 +220,7 @@ class GameView {
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
                 text: "Roll",
-                callback:this.afk ? setTimeout(()=>{
-                    console.log('endinggg')
-                    this.handleGameEnd()
-                }, 2000) :() => {
+                callback:() => {
                     document.getElementById("roll").checked = true;
                     document.querySelector("#modal-buttons-container button").disabled = true;
                     document.querySelector("#modal-buttons-container button").innerText = "Hold on...";
@@ -377,7 +374,7 @@ class GameView {
     }
 
     handleTrade = function (message) {
-        console.log(message)
+        console.log(message , this)
         document.getElementById('trade').style.display = 'inherit';
         document.getElementsByClassName('card-content-container')[0].style.display = 'none';
         document.getElementById('accepttradebutton').style.display = 'none';
@@ -404,7 +401,7 @@ class GameView {
         proposeTrade.onclick = startTrade;
         cancelTrade.onclick = stopTrade;
 
-        let currPlayer = message.curr_player;
+        let currPlayer = this.curr_player;
         let dropdown = message.playersName.map((playerName) => {
             if (playerName !== currPlayer)
                 return playerName;
