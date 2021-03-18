@@ -22,12 +22,12 @@
                 </svg>
                 <span>Upload</span>
             </div>
-            <img id="profile-user-avatar" src="{{ profile.avatar.url }}">
+            <img id="profile-user-avatar" src="{{ user.profile.avatar.url }}">
             <div id="profile-meta">
                 <span id="profile-name">{{ user.first_name }}&nbsp;{{ user.last_name }}</span>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <textarea id="profile-bio" readonly name="bio">{{ profile.bio }}</textarea>
+                    <textarea id="profile-bio" readonly name="bio">{{ user.profile.bio }}</textarea>
                     <input type="file" id="profile-avatar-file" name="avatar" hidden>
                         &nbsp;
                     <div id="profile-actions">
