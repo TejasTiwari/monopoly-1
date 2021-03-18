@@ -8,7 +8,7 @@ class GameView {
         this.audioManager.play("background");
 
         this.gameInProcess = true;
-        this.message = null
+        this.message=null
         // const trade = require('../game_views/')
     }
 
@@ -50,7 +50,7 @@ class GameView {
         this.$modalTitle = document.getElementById("modal-title");
         this.$modalSubTitle = document.getElementById("modal-subtitle");
 
-        document.getElementById('trade').style.display = 'none'
+         document.getElementById('trade').style.display = 'none'
 
         this.showModal(null, "Welcome to Monopoly", "", "Loading game resources...", []);
         this.initBoard();
@@ -74,12 +74,12 @@ class GameView {
 
     initWebSocket() {
         this.socket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`);
-
+        // console.log(this)
         this.socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
             this.handleStatusChange(message);
-            this.message = message
-            console.log(message)
+            // this.message=message
+            
         };
     }
 
@@ -102,7 +102,8 @@ class GameView {
             "cancel_decision": this.handleCancel,
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
-            "trade": this.handleTrade,
+            "trade":this.handleTrade,
+           
         };
 
         if (!this.gameInProcess) return;
@@ -174,6 +175,7 @@ class GameView {
     * onDiceRolled: function
     * */
     changePlayer(nextPlayer, onDiceRolled) {
+        let tradeView;
         // update user indicator
         if (this.currentPlayer !== null) {
             let $currentUserGroup = document.getElementById(`user-group-${this.currentPlayer}`);
@@ -185,6 +187,17 @@ class GameView {
 
         this.currentPlayer = nextPlayer;
         let title = (this.currentPlayer === this.myPlayerIndex) ? "Your Turn!" : "";
+        // this.tradeSocket.onmessage=(event) => {
+        //     const message = JSON.parse(event.data);
+        //     if(message.playerSelected===this.username){
+        //         // logic for table
+        //     }else if(message.currPlayer===this.username){
+        //         // do nothing
+        //     }      
+        //     else{
+        //         // message.currPlayer and message.playerSelected are trading
+        //     }      
+        // };
 
         // role dice
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
@@ -199,11 +212,11 @@ class GameView {
 
                     onDiceRolled();
                 }
-            }, {
+            },{
                 text: "Trade",
                 callback: this.handleTrade.bind(this)
             }];
-        this.showModal(nextPlayer, title, "", this.diceMessage, button);
+        this.showModal(nextPlayer, title, 'tradeView', this.diceMessage, button);
     }
 
     /*
@@ -347,10 +360,15 @@ class GameView {
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
 
-        function startTrade() {
+       async function startTrade(currPlayer, playerSelected) {
+        let data={currPlayer,playerSelected}
             document.getElementById('accepttradebutton').style.display = '';
             document.getElementById('rejecttradebutton').style.display = '';
-            
+        // 
+
+            //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
+            // this.tradeSocket.send(JSON.stringify({data}))
+
         }
 
         function stopTrade() {
@@ -377,7 +395,7 @@ class GameView {
 
         let propertyCurrPlayer = message.owner.filter((item) => item === currPlayer);
         let propertyRequestedPlayer = message.owner.filter((item) => item === playerSelected);
-
+        
         let table1 = document.createElement("table");
         let table2 = document.createElement("table");
         table1.style.display = "inline-block";
@@ -443,7 +461,7 @@ class GameView {
         }
 
         if (message.is_option === "true") {
-            console.log('woeking')
+    
             const buttons = (this.myPlayerIndex === currPlayer) ? [{
                 text: "Buy",
                 callback: this.confirmDecision.bind(this)
@@ -474,11 +492,15 @@ class GameView {
     }
 
     handleBuyLand(message) {
-        const { curr_player, curr_cash, tile_id } = message;
+        const {curr_player, curr_cash, tile_id} = message;
         this.changeCashAmount(curr_cash);
         this.gameController.addProperty(PropertyManager.PROPERTY_OWNER_MARK, tile_id, curr_player);
+        console.log(PropertyManager.models)
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
+    }
+    handleExchangeLand(data){
+        
     }
 
     handleConstruct(message) {
@@ -543,7 +565,8 @@ class GameView {
         await this.hideModal(true);
     }
 
-    async trade() {
+    async trade (){
+        console.log(this)
         this.socket.send(JSON.stringify({
             action: "trade",
             hostname: this.hostName,
