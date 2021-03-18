@@ -67,40 +67,53 @@
             <div id="modal-buttons-container"></div>
         </div>
         <div id="trade">
-            <table style="border-spacing: 3px;">
-                <tr>
-                    <td class="trade-cell">
-                        <div id="trade-leftp-name">pogo</div>
-                    </td>
-                    <td class="trade-cell">
-                        <div id="trade-rightp-name">pogo</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="trade-cell">
-                        $&nbsp;<input id="trade-leftp-money" value="0" title="Enter amount to exchange with the other player." />
-                    </td>
-                    <td class="trade-cell">
-                        $&nbsp;<input id="trade-rightp-money" value="0" title="Enter amount to exchange with the other player." />
-                    </td>
-                </tr>
-                <tr>
-                    <td id="trade-leftp-property" class="trade-cell">test</td>
-                    <td id="trade-rightp-property" class="trade-cell">test</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="trade-cell">
-                        <input type="button" id="proposetradebutton" value="Propose Trade" onclick="game.proposeTrade();" title="Exchange the money and properties that are checked above." />
-                        <input type="button" id="canceltradebutton" value="Cancel Trade" onclick='game.cancelTrade();' title="Cancel the trade." />
-                        <input type="button" id="accepttradebutton" value="Accept Trade" onclick="game.acceptTrade();" title="Accept the proposed trade." />
-                        <input type="button" id="rejecttradebutton" value="Reject Trade" onclick='game.cancelTrade();' title="Reject the proposed trade." />
-                    </td>
-                </tr>
-            </table>
-        </div>
-         
+        <table style="border-spacing: 3px;">
+            <tr>
+                <td class="trade-cell">
+                    <div id="trade-leftp-name">Player1</div>
+                </td>
+                <td class="trade-cell">
+                    <div id="trade-rightp-name">Player2</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="trade-cell">
+                    $&nbsp;<input type="number" id="trade-leftp-money" value="0" title="Enter amount to exchange with the other player." />
+                </td>
+                <td class="trade-cell">
+                    $&nbsp;<input type="number" id="trade-rightp-money" value="0" title="Enter amount to exchange with the other player." />
+                </td>
+            </tr>
+            <tr>
+                <td id="trade-leftp-property" class="trade-cell">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <label for="vehicle1">Property1</label><br>
+                    <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                    <label for="vehicle2">Property2</label><br>
+                    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                    <label for="vehicle3">Property3</label><br>
+                </td>
+                <td id="trade-rightp-property" class="trade-cell">
+                    <input type="checkbox" id="vehice1" name="vehice1" value="Bik">
+                    <label for="vehicle1">Property1</label><br>
+                    <input type="checkbox" id="vehice2" name="vehice2" value="Ca">
+                    <label for="vehicle2">Property2</label><br>
+                    <input type="checkbox" id="vehice3" name="vehice3" value="Bat">
+                    <label for="vehicle3">Property3</label><br>
+                    <input type="checkbox" id="vehice3" name="vehice3" value="at">
+                    <label for="vehicle3">Property4</label><br>
+                    <input type="checkbox" id="vehice3" name="vehice3" value="B">
+                    <label for="vehicle3">Property5</label><br>
+                </td>
+            </tr>
+        </table>
+        <input type="button" id="proposetradebutton" value="Propose Trade" onclick="game.proposeTrade();" title="Exchange the money and properties that are checked above." />
+        <input type="button" id="canceltradebutton" value="Cancel Trade" onclick='game.cancelTrade();' title="Cancel the trade." />
+
     </div>
-   
+
+    </div>
+
     <div id="dice-message" class="hidden">
         {% include "rolling_dice.html" %}
     </div>
