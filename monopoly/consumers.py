@@ -96,7 +96,7 @@ def ws_message(message):
     if action == "chat":
         handle_chat(hostname, msg)
     if action == "trade":
-        handle_trade(hostname, msg)
+        handle_trade(hostname, msg, games)
     if action == "end_game":
         handle_end_game(hostname, games)
 

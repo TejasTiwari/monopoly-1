@@ -141,7 +141,7 @@ def handle_roll(hostname, games, changehandlers):
     })
 
 # trade handling function
-def handle_trade(hostname, msg):
+def handle_trade(hostname, msg, games):
     game = games[hostname]
     players = game.get_players()
 
@@ -155,7 +155,7 @@ def handle_trade(hostname, msg):
     for player in players:
         assets.append(player.get_asset())
 
-    sender = msg["from"]
+    #sender = msg["from"]
     Group(hostname).send({
         "text" : build_trade_details_msg(hostname, msg, players, current_cash, assets)
     }) 

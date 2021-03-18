@@ -198,7 +198,20 @@ class GameView {
         //         // message.currPlayer and message.playerSelected are trading
         //     }      
         // };
+     
+       console.log('ok', this)
+      if(this.currPlayer === nextPlayer){ 
+          setTimeout(()=>{
+           this.players = this.players.filter((e,index)=>index!==nextPlayer)
+           if( this.currentPlayer ===this.players.length){
+               this.currentPlayer = 0;
+            }
+            this.changePlayer(this.currPlayer,onDiceRolled)
+            
+            this.socket.close()
+            window.location = `http://${window.location.host}/monopoly/join`;
 
+    },4000)}
         // role dice
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
@@ -334,6 +347,8 @@ class GameView {
         if (message.waitDecision === "false") {
             this.changePlayer(nextPlayer, this.onDiceRolled.bind(this));
         } else {
+            
+            
             const buttons = (this.myPlayerIndex === nextPlayer) ? [{
                 text: "Buy",
                 callback: this.confirmDecision.bind(this)
@@ -353,6 +368,7 @@ class GameView {
     }
 
     handleTrade = function (message) {
+        console.log(message)
         document.getElementById('trade').style.display = 'inherit';
         document.getElementsByClassName('card-content-container')[0].style.display = 'none';
         document.getElementById('accepttradebutton').style.display = 'none';
@@ -566,7 +582,7 @@ class GameView {
     }
 
     async trade (){
-        console.log(this)
+        // console.log(this)
         this.socket.send(JSON.stringify({
             action: "trade",
             hostname: this.hostName,
