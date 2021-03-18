@@ -162,9 +162,7 @@ class GameView {
 
             this.$usersContainer.innerHTML += `
                 <div id="user-group-${i}" class="user-group" style="background: ${GameView.PLAYERS_COLORS[i]}">
-                    <a href="/monopoly/profile/${players[i].userName}" target="_blank">
-                        ${avatarTemplate}
-                    </a>
+                    ${avatarTemplate}
                     <span class="user-cash">
                         <div class="monopoly-cash">M</div>
                         <div class="user-cash-num">1500</div>
