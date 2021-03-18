@@ -147,11 +147,23 @@ def handle_trade(hostname, msg, games):
     
     players_info = []
     for player in players:
+        props = []
+        player_props = list(player.get_properties())
+        for prop in player_props:
+            props.append({
+               "1" : 1 
+            })
+        
+        print(player_props)
         players_info.append({
             "index" : player.get_index(),
             "cash" : player.get_money(),
             "asset" : player.get_asset(),
+<<<<<<< HEAD
             "properties" : list(player.get_properties())
+=======
+            "owners" : list(game.get_land_owners())
+>>>>>>> b9afaa6296082ee103c43b8d98fa86099840014d
         })
 
     #sender = msg["from"]
@@ -168,9 +180,26 @@ def handle_end_game(hostname, games):
     print(game)
     players = game.get_players()
     all_asset = []
+      
     curr_player = game.get_current_player().get_index()
     for player in players:
+        asset_dicts.append((player, player.get_asset()))
         all_asset.append(player.get_asset())
+        
+    asset_dicts.sort(key = lambda x: x[1])
+    winning_asset = asset_dicts[0][1]
+    for info in asset_dicts:
+        if info[1] == winning_asset:
+            profile_user = User.objects.get(username=info[0])
+            try:
+                profile = Profile.objects.get(user=profile_user)
+                profile.wins += 1
+                profile.save()
+            except Exception:
+                profile = None                
+        else:
+            break
+            
     Group(hostname).send({
         "text": build_game_end_msg(curr_player, all_asset)
     })
@@ -237,8 +266,11 @@ def handle_chat(hostname, msg):
 def build_trade_details_msg(hostname, players):
     context = {
         "action" : "trade",
+<<<<<<< HEAD
         #"cash" : cash,
         #"assets" : assets,
+=======
+>>>>>>> b9afaa6296082ee103c43b8d98fa86099840014d
         "players_info" : players
     }
     return json.dumps(context)

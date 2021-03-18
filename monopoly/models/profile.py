@@ -10,6 +10,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
     bio = models.CharField(max_length=140, blank=True)
     avatar = models.FileField(blank=False)
+    wins = models.IntegerField(default = 0)
 
     def __str__(self):
         return str(self.user) + str(self.bio) + str(self.avatar)

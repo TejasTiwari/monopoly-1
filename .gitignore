@@ -102,6 +102,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+monopolyenv
 
 # Spyder project settings
 .spyderproject
@@ -167,3 +168,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+*.py.bak
+monopoly/ws_handlers/*.py.bak
+monopoly/*.py.bak
+webapps/*.bak
+monopoly/ws_handlers/game_handler.py.bak
