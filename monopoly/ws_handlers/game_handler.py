@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from monopoly.models import Profile
+from monopoly.models.profile import Profile
 from monopoly.core.game import *
 from monopoly.ws_handlers.modal_title_enum import *
 from channels import Group
@@ -39,7 +39,7 @@ def ws_connect_for_game(message, rooms, games):
         pos_change.append(player.get_position())
 
     # wait for decision
-    if hostname in decisions:
+    if hostname in decisions.keys():
         wait_decision = "true"
         decision = decisions[hostname].beautify()
         landname = decisions[hostname].get_land().get_description()
@@ -140,9 +140,30 @@ def handle_roll(hostname, games, changehandlers):
                                    new_event, new_pos, curr_cash, next_player, title, landname, bypass_start)
     })
 
+# trade handling function
+def handle_trade(hostname, msg):
+    game = games[hostname]
+    players = game.get_players()
+    
+    # getting players cash
+    current_cash = []
+    for player in players:
+        current_cash.append(player.get_money())
+        
+    # getting assets details
+    assets = []
+    for player in players:
+        assets.append(player.get_asset())
+    
+    sender = msg["from"]
+    Group(hostname).send({
+        "text" : build_trade_details_msg(hostname, msg, players, current_cash, assets)
+    }) 
+    
 
 def handle_end_game(hostname, games):
     game = games[hostname]
+    print(game)
     players = game.get_players()
     all_asset = []
     curr_player = game.get_current_player().get_index()
@@ -151,7 +172,9 @@ def handle_end_game(hostname, games):
     Group(hostname).send({
         "text": build_game_end_msg(curr_player, all_asset)
     })
-    del decisions[hostname]
+    del games[hostname]
+    del rooms[hostname]
+    
 
 
 def handle_confirm_decision(hostname, games):
@@ -209,6 +232,16 @@ def handle_chat(hostname, msg):
     })
 
 
+def build_trade_details_msg(hostname, msg, players, cash, assets):
+    context = {
+        "hostname" : hostname,
+        "msg" : msg,
+        "players" : players,
+        "cash" : cash,
+        "assets" : assets
+    }
+    return json.dumps(context)
+
 def build_init_msg(players, cash_change, pos_change, wait_decision, decision, next_player,
                    title, landname, owners, houses):
     players_list = []
@@ -234,14 +267,14 @@ def build_init_msg(players, cash_change, pos_change, wait_decision, decision, ne
            "owners": owners,
            "houses": houses,
            }
-    print(json.dumps(ret))
+    ##print json.dumps(ret)
     return json.dumps(ret)
 
 
 def build_add_err_msg():
     ret = {"action": "add_err",
            }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -261,7 +294,7 @@ def build_roll_res_msg(curr_player, steps, result, is_option, is_cash_change, ne
            "landname": landname,
            "bypass_start": bypass_start,
             }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -270,7 +303,7 @@ def build_game_end_msg(curr_player, all_asset):
            "loser": curr_player,
            "all_asset": all_asset,
     }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -281,7 +314,7 @@ def build_buy_land_msg(curr_player, curr_cash, tile_id, next_player):
            "tile_id": tile_id,
            "next_player": next_player,
     }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -292,7 +325,7 @@ def build_construct_msg(curr_cash, tile_id, build_type, next_player):
            "build_type": build_type,
            "next_player": next_player,
            }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -300,7 +333,7 @@ def build_cancel_decision_msg(next_player):
     ret = {"action": "cancel_decision",
            "next_player": next_player,
     }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -308,7 +341,7 @@ def build_pass_start_msg(curr_player):
     ret = {"action": "pass_start",
            "curr_player": curr_player,
           }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
 
 
@@ -317,5 +350,5 @@ def build_chat_msg(sender, content):
            "sender": sender,
            "content": content,
     }
-    print(json.dumps(ret))
+    #print json.dumps(ret)
     return json.dumps(ret)
