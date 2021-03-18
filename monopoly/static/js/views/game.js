@@ -214,7 +214,7 @@ class GameView {
                 }
             },{
                 text: "Trade",
-                callback: this.handleTrade.bind(this)
+                callback: this.trade.bind(this)
             }];
         this.showModal(nextPlayer, title, 'tradeView', this.diceMessage, button);
     }
@@ -470,7 +470,7 @@ class GameView {
                 callback: this.cancelDecision.bind(this)
             }, {
                 text: "Trade",
-                callback: this.handleTrade.bind(this)
+                callback: this.trade.bind(this)
             }] : [];
 
             this.showModal(currPlayer, title, landname, this.players[currPlayer].userName + eventMsg, buttons);
