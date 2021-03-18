@@ -8,6 +8,10 @@ class BoardController {
 
         this.board = new Board();
         this.players = [];
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        this.squareTiles = [];
+        this.currentTile = null;
     }
 
     drawBoard(callback) {
@@ -277,6 +281,29 @@ class BoardController {
                 square.position.y = -0.01;
 
                 square.rotation.x = -90 * Math.PI / 180;
+                if (row === 0 || row === 10 || col === 0 || col === 10) {
+                    this.squareTiles.push(square);
+                    window.addEventListener(
+                              "click",
+                              (event) => {
+                                this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                                this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                        
+                                this.raycaster.setFromCamera(this.mouse, this.camera);
+                        
+                                const intersects = this.raycaster.intersectObjects(this.scene.children);
+                                // console.log('sq', square)
+                                const isIntersected = intersects.find(
+                                  (intersectedEl) => intersectedEl.object.uuid === square.uuid
+                                );
+                        
+                                if (isIntersected) {
+                                  console.log('yay', square)
+                                }
+                              },
+                              false
+                            );
+                }
 
                 this.scene.add(square);
             }
@@ -298,7 +325,13 @@ class BoardController {
 
     onAnimationFrame() {
         requestAnimationFrame(() => this.onAnimationFrame());
+           // update the picking ray with the camera and mouse position
+           this.raycaster.setFromCamera(this.mouse, this.camera);
 
+           // calculate objects intersecting the picking ray
+           const intersects = this.raycaster.intersectObjects(this.squareTiles);
+           this.currentTile = intersects[0] ?? null;
+        // console.log(this.currentTile,)
         this.cameraController.update();
 
         // update moving light position
