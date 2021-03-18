@@ -28,6 +28,11 @@ class GameView {
         this.$helpOverlay = document.getElementById("rules-overlay");
         this.showingHelp = false;
 
+        this.afkButton = document.getElementById('afk')
+        this.afkButton.style.backgroundColor='red'
+        this.afkButton.addEventListener('change', this.afkHandler.bind(this))
+
+
         if (this.userName === this.hostName) {
             this.$exitControl = document.getElementById("exit-control");
             this.$exitControl.addEventListener("click", this.endGame.bind(this));
@@ -111,9 +116,18 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
-    afk(){
-        console.log(this.afk)
-        this.afk= true
+    afkHandler(){
+        this.afk = !(this.afk)
+       
+        if(this.afk){
+            this.afkButton.style.backgroundColor='green'
+        }else{
+            this.afkButton.style.backgroundColor='red'
+        }
+        if(this.afk && this.currrentPlayer===this.myPlayerIndex){
+            console.log('esvsv', this)
+            this.onDiceRolled();
+        }
     }
 
     /*
@@ -204,7 +218,7 @@ class GameView {
         // };
      
        console.log('ok', this)
-      if(this.currPlayer === nextPlayer && this.afk===false){ 
+      if(this.currPlayer === nextPlayer){ 
           setTimeout(()=>{
            this.players = this.players.filter((e,index)=>index!==nextPlayer)
            if( this.currentPlayer ===this.players.length){
@@ -317,7 +331,9 @@ class GameView {
     }
 
     async handleInit(message) {
-         document.getElementById('afk').onclick = this.afk = true
+         
+
+
 
         let players = message.players;
         let changeCash = message.changeCash;
@@ -402,11 +418,11 @@ class GameView {
         cancelTrade.onclick = stopTrade;
 
         let currPlayer = this.curr_player;
-        let dropdown = message.playersName.map((playerName) => {
-            if (playerName !== currPlayer)
-                return playerName;
+        let dropdown = message.players_info.map((player_info) => {
+            if (player_info.index !== currPlayer)
+                return this.players[currPlayer];
         });
-        for (i = 0; i < dropdown.length; i++) {
+        for (let i = 0; i < dropdown.length; i++) {
             let option = document.createElement("option");
             option.innerHTML = dropdown[i];
             let select = document.getElementById("select");
@@ -426,7 +442,7 @@ class GameView {
         table.append(table1);
         table.append(table2);
 
-        for (i = 0; i < propertyCurrPlayer.length; i++) {
+        for (let i = 0; i < propertyCurrPlayer.length; i++) {
             let tr = document.createElement("tr");
             table1.append(tr);
             let td1 = document.createElement("td");
@@ -439,7 +455,7 @@ class GameView {
             tr.append(td1);
         }
 
-        for (i = 0; i < propertyRequestedPlayer.length; i++) {
+        for (let i = 0; i < propertyRequestedPlayer.length; i++) {
             let tr = document.createElement("tr");
             table2.append(tr);
             let td1 = document.createElement("td");
@@ -517,7 +533,7 @@ class GameView {
         const {curr_player, curr_cash, tile_id} = message;
         this.changeCashAmount(curr_cash);
         this.gameController.addProperty(PropertyManager.PROPERTY_OWNER_MARK, tile_id, curr_player);
-        console.log(PropertyManager.models)
+        // console.log(PropertyManager.models)
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
     }
