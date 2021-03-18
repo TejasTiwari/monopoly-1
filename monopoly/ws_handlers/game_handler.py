@@ -155,7 +155,7 @@ def handle_trade(hostname, msg, games):
     for player in players:
         assets.append(player.get_asset())
 
-    sender = msg["from"]
+    #sender = msg["from"]
     Group(hostname).send({
         "text" : build_trade_details_msg(hostname, msg, players, current_cash, assets)
     }) 
