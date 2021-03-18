@@ -9,6 +9,7 @@ class GameView {
 
         this.gameInProcess = true;
         this.message=null
+        this.afk = false
         // const trade = require('../game_views/')
     }
 
