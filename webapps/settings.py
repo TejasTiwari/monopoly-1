@@ -151,8 +151,8 @@ STATIC_URL = '/static/'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS=True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "simejiapranay@gmail.com"
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_USER = "ccbitspilani2021@gmail.com"
+EMAIL_HOST_PASSWORD = "bakchodclub@777"
 # EMAIL_USE_SSL = True
 
 print(('Email host:port = {host}:{port}, user={user}'.format(

@@ -9,6 +9,7 @@ class GameView {
 
         this.gameInProcess = true;
         this.message=null
+        this.afk = false
         // const trade = require('../game_views/')
     }
 
@@ -111,6 +112,10 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
+    afk(){
+        console.log(this.afk)
+        this.afk= true
+    }
 
     /*
     * Init game status, called after ws.connect
@@ -200,7 +205,7 @@ class GameView {
         // };
      
        console.log('ok', this)
-      if(this.currPlayer === nextPlayer){ 
+      if(this.currPlayer === nextPlayer && this.afk===false){ 
           setTimeout(()=>{
            this.players = this.players.filter((e,index)=>index!==nextPlayer)
            if( this.currentPlayer ===this.players.length){
@@ -216,7 +221,10 @@ class GameView {
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
                 text: "Roll",
-                callback: () => {
+                callback:this.afk ? setTimeout(()=>{
+                    console.log('endinggg')
+                    this.handleGameEnd()
+                }, 2000) :() => {
                     document.getElementById("roll").checked = true;
                     document.querySelector("#modal-buttons-container button").disabled = true;
                     document.querySelector("#modal-buttons-container button").innerText = "Hold on...";
@@ -313,6 +321,8 @@ class GameView {
     }
 
     async handleInit(message) {
+         document.getElementById('afk').onclick = this.afk = true
+
         let players = message.players;
         let changeCash = message.changeCash;
         let nextPlayer = message.nextPlayer;

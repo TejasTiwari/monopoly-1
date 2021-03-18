@@ -298,7 +298,7 @@ class BoardController {
                                 );
                         
                                 if (isIntersected) {
-                                  console.log('yay', square)
+                                //   console.log('yay', square)
                                 }
                               },
                               false
