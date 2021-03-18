@@ -151,7 +151,7 @@ def handle_trade(hostname, msg, games):
             "index" : player.get_index(),
             "cash" : player.get_money(),
             "asset" : player.get_asset(),
-            "properties" : player.get_properties
+            "properties" : list(player.get_properties())
         })
 
     #sender = msg["from"]
@@ -236,13 +236,9 @@ def handle_chat(hostname, msg):
 
 def build_trade_details_msg(hostname, players):
     context = {
-<<<<<<< HEAD
-        "action" : "trade_res",
-=======
         "action" : "trade",
         #"cash" : cash,
         #"assets" : assets,
->>>>>>> c1f3b85e0ab4920116c4a3fe152217d7dd45c923
         "players_info" : players
     }
     return json.dumps(context)

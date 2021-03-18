@@ -30,7 +30,7 @@ class GameView {
 
         this.afkButton = document.getElementById('afk')
         this.afkButton.style.backgroundColor='red'
-        this.afkButton.addEventListener('change', this.afkHandler.bind(this))
+        this.afkButton.addEventListener('click', this.afkHandler.bind(this))
 
 
         if (this.userName === this.hostName) {
@@ -116,18 +116,25 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
-    afkHandler(){
-        this.afk = !(this.afk)
-       
+    afkHandler(){  
+        document.getElementById("roll").checked = true;
+
+                    this.audioManager.play("dice");     
         if(this.afk){
             this.afkButton.style.backgroundColor='green'
+            document.querySelector("#modal-buttons-container button").disabled = true;
+            document.querySelector("#modal-buttons-container button").innerText = "Auto roll...";
         }else{
             this.afkButton.style.backgroundColor='red'
         }
-        if(this.afk && this.currrentPlayer===this.myPlayerIndex){
+        // console.log(this)
+        if(this.afk && this.currentPlayer === this.myPlayerIndex)
+        {
             console.log('esvsv', this)
             this.onDiceRolled();
         }
+        this.afk = !(this.afk)
+
     }
 
     /*
@@ -390,7 +397,7 @@ class GameView {
     }
 
     handleTrade = function (message) {
-        console.log(message , this)
+        console.log(message)
         document.getElementById('trade').style.display = 'inherit';
         document.getElementsByClassName('card-content-container')[0].style.display = 'none';
         document.getElementById('accepttradebutton').style.display = 'none';
@@ -417,12 +424,13 @@ class GameView {
         proposeTrade.onclick = startTrade;
         cancelTrade.onclick = stopTrade;
 
-        let currPlayer = this.curr_player;
+        
         let dropdown = message.players_info.map((player_info) => {
-            if (player_info.index !== currPlayer)
-                return this.players[currPlayer];
+            if (player_info.index !== this.myPlayerIndex)
+                return this.players[this.myPlayerIndex].fullName;
+            return -1;
         });
-        for (let i = 0; i < dropdown.length; i++) {
+        for (let i = 0; i < dropdown.length && dropdown[i]!==-1; i++) {
             let option = document.createElement("option");
             option.innerHTML = dropdown[i];
             let select = document.getElementById("select");
