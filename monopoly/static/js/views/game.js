@@ -104,7 +104,6 @@ class GameView {
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
             "trade":this.handleTrade,
-           
         };
 
         if (!this.gameInProcess) return;

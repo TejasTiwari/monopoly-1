@@ -244,7 +244,7 @@ def handle_chat(hostname, msg):
 
 def build_trade_details_msg(hostname, players):
     context = {
-        "action" : "trade_res",
+        "action" : "trade",
         #"cash" : cash,
         #"assets" : assets,
         "players_info" : players
