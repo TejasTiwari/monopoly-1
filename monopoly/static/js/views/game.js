@@ -116,16 +116,10 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
-<<<<<<< Updated upstream
     afkHandler(){  
         document.getElementById("roll").checked = true;
 
                     this.audioManager.play("dice");     
-=======
-    afkHandler(){
-        this.afk = !(this.afk);
-        
->>>>>>> Stashed changes
         if(this.afk){
             this.afkButton.style.backgroundColor='green'
             document.querySelector("#modal-buttons-container button").disabled = true;
@@ -133,13 +127,9 @@ class GameView {
         }else{
             this.afkButton.style.backgroundColor='red'
         }
-<<<<<<< Updated upstream
         // console.log(this)
         if(this.afk && this.currentPlayer === this.myPlayerIndex)
         {
-=======
-        if(true){
->>>>>>> Stashed changes
             console.log('esvsv', this)
             this.onDiceRolled();
         }
@@ -405,13 +395,13 @@ class GameView {
     }
 
     handleTrade = function (message) {
-        console.log(message)
+        console.log(message, this)
         if(this.myPlayerIndex===this.currentPlayer){
+
             document.getElementById('trade').style.display = 'inherit';
             document.getElementsByClassName('card-content-container')[0].style.display = 'none';
             document.getElementById('accepttradebutton').style.display = 'none';
             document.getElementById('rejecttradebutton').style.display = 'none';
-
         }
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
@@ -457,9 +447,10 @@ class GameView {
         let table2 = document.createElement("table");
         table1.style.display = "inline-block";
         table1.style.display = "inline-block";
-        let table = document.getElementById("table");
-        table.append(table1);
-        table.append(table2);
+        let table_1 = document.getElementById("trade-leftp-property");
+        let table_2 = document.getElementById("trade-rightp-property");
+        table_1.append(table1);
+        table_2.append(table2);
 
         for (let i = 0; i < propertyCurrPlayer.length; i++) {
             let tr = document.createElement("tr");
