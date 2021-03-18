@@ -390,11 +390,14 @@ class GameView {
     }
 
     handleTrade = function (message) {
-        console.log(message , this)
-        document.getElementById('trade').style.display = 'inherit';
-        document.getElementsByClassName('card-content-container')[0].style.display = 'none';
-        document.getElementById('accepttradebutton').style.display = 'none';
-        document.getElementById('rejecttradebutton').style.display = 'none';
+        console.log(message, this)
+        if(this.myPlayerIndex===this.currentPlayer){
+
+            document.getElementById('trade').style.display = 'inherit';
+            document.getElementsByClassName('card-content-container')[0].style.display = 'none';
+            document.getElementById('accepttradebutton').style.display = 'none';
+            document.getElementById('rejecttradebutton').style.display = 'none';
+        }
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
 
@@ -418,6 +421,7 @@ class GameView {
         cancelTrade.onclick = stopTrade;
 
         let currPlayer = this.curr_player;
+
         let dropdown = message.players_info.map((player_info) => {
             if (player_info.index !== currPlayer)
                 return this.players[currPlayer];
