@@ -424,13 +424,14 @@ class GameView {
 
         proposeTrade.onclick = startTrade;
         cancelTrade.onclick = stopTrade;
-
+        let currentPlayer = this.currentPlayer
         
-        let dropdown = message.players_info.map((player_info) => {
-            if (player_info.index !== this.myPlayerIndex)
-                return this.players[this.myPlayerIndex].fullName;
-            return -1;
-        });
+        let dropdown =[]
+        for (let i = 0; i < message.players_info.length ; i++) {
+            if(i !==this.myPlayerIndex){
+                dropdown.push(this.players[i].fullName)
+            }
+        }
         for (let i = 0; i < dropdown.length && dropdown[i]!==-1; i++) {
             let option = document.createElement("option");
             option.innerHTML = dropdown[i];
@@ -439,9 +440,18 @@ class GameView {
         }
 
         let playerSelected = document.getElementById('select').value;
-
-        let propertyCurrPlayer = message.owner.filter((item) => item === currPlayer);
-        let propertyRequestedPlayer = message.owner.filter((item) => item === playerSelected);
+      let  playerSelectedIndex = this.players.filter(item => playerSelected===item.fullName)
+        let propertyCurrPlayer = []
+        let propertyRequestedPlayer= [];
+        for(let i = 0 ; i<40; i++){
+            if(message.players_info[0].owners[i]===currentPlayer){
+                propertyCurrPlayer.append(i)
+            } 
+            if(message.players_info[0].owners[i]===playerSelected) 
+            propertyRequestedPlayer.append(i)
+        }
+        // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
+        console.log(propertyCurrPlayer,propertyRequestedPlayer)
         
         let table1 = document.createElement("table");
         let table2 = document.createElement("table");
