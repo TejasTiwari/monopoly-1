@@ -147,11 +147,19 @@ def handle_trade(hostname, msg, games):
     
     players_info = []
     for player in players:
+        props = []
+        player_props = list(player.get_properties())
+        for prop in player_props:
+            props.append({
+               "1" : 1 
+            })
+        
+        print(player_props)
         players_info.append({
             "index" : player.get_index(),
             "cash" : player.get_money(),
             "asset" : player.get_asset(),
-            "properties" : player.get_properties
+            "owners" : list(game.get_land_owners())
         })
 
     #sender = msg["from"]
