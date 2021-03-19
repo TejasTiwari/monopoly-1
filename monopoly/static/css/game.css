@@ -99,7 +99,9 @@
 
 #modal-card {
     width: 432px;
-    height: fit-content;
+    right:0%;
+    top: 30%;
+    bottom: auto;
     overflow: initial;
 }
 
@@ -508,3 +510,4 @@
 #canceltradebutton {
     background-color: #ca322d;
 }
+

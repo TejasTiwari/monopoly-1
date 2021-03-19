@@ -30,7 +30,7 @@ class GameView {
 
         this.afkButton = document.getElementById('afk')
         this.afkButton.style.backgroundColor='red'
-        this.afkButton.addEventListener('change', this.afkHandler.bind(this))
+        this.afkButton.addEventListener('click', this.afkState.bind(this))
 
 
         if (this.userName === this.hostName) {
@@ -109,6 +109,9 @@ class GameView {
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
             "trade":this.handleTrade,
+            "propose":this.proposeTrade,
+            "accept": this.acceptTrade,
+            "reject": this.rejectTrade, 
         };
 
         if (!this.gameInProcess) return;
@@ -116,18 +119,40 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
-    afkHandler(){
+    afkState(){
         this.afk = !(this.afk)
-       
+
         if(this.afk){
             this.afkButton.style.backgroundColor='green'
         }else{
             this.afkButton.style.backgroundColor='red'
         }
-        if(this.afk && this.currrentPlayer===this.myPlayerIndex){
+        
+    }
+     afkHandler(){  
+            
+        
+        // console.log(this)
+        if(this.afk && this.currentPlayer === this.myPlayerIndex)
+        {   document.getElementById("roll").checked = true;
+        document.querySelector("#modal-buttons-container button").disabled = true;
+        document.querySelector("#modal-buttons-container button").innerText = "Auto roll...";
+
+        this.audioManager.play("dice"); 
             console.log('esvsv', this)
-            this.onDiceRolled();
+        this.socket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`);
+         this.onDiceRolled();
+         this.socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);                
+                this.handleRollRes(message)
+            };
+           this.cancelDecision()
+            this.socket.onmessage = (event) => {
+                  const message = JSON.parse(event.data);                
+                  this.handleCancel(message)
+              };
         }
+
     }
 
     /*
@@ -162,9 +187,7 @@ class GameView {
 
             this.$usersContainer.innerHTML += `
                 <div id="user-group-${i}" class="user-group" style="background: ${GameView.PLAYERS_COLORS[i]}">
-                    <a href="/monopoly/profile/${players[i].userName}" target="_blank">
-                        ${avatarTemplate}
-                    </a>
+                    ${avatarTemplate}
                     <span class="user-cash">
                         <div class="monopoly-cash">M</div>
                         <div class="user-cash-num">1500</div>
@@ -194,6 +217,7 @@ class GameView {
     * */
     changePlayer(nextPlayer, onDiceRolled) {
         let tradeView;
+        console.log('change player')
         // update user indicator
         if (this.currentPlayer !== null) {
             let $currentUserGroup = document.getElementById(`user-group-${this.currentPlayer}`);
@@ -217,19 +241,19 @@ class GameView {
         //     }      
         // };
      
-       console.log('ok', this)
-      if(this.currPlayer === nextPlayer){ 
-          setTimeout(()=>{
-           this.players = this.players.filter((e,index)=>index!==nextPlayer)
-           if( this.currentPlayer ===this.players.length){
-               this.currentPlayer = 0;
-            }
-            this.changePlayer(this.currPlayer,onDiceRolled)
+    //    console.log('ok', this)
+    //   if(this.currPlayer === nextPlayer){ 
+    //       setTimeout(()=>{
+    //        this.players = this.players.filter((e,index)=>index!==nextPlayer)
+    //        if( this.currentPlayer ===this.players.length){
+    //            this.currentPlayer = 0;
+    //         }
+    //         this.changePlayer(this.currPlayer,onDiceRolled)
             
-            this.socket.close()
-            window.location = `http://${window.location.host}/monopoly/join`;
+    //         this.socket.close()
+    //         window.location = `http://${window.location.host}/monopoly/join`;
 
-    },4000)}
+    // },4000)}
         // role dice
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
@@ -247,6 +271,8 @@ class GameView {
                 text: "Trade",
                 callback: this.trade.bind(this)
             }];
+        (nextPlayer === this.myPlayerIndex && this.afk) ? this.afkHandler() :  undefined
+
         this.showModal(nextPlayer, title, 'tradeView', this.diceMessage, button);
     }
 
@@ -260,6 +286,18 @@ class GameView {
     * }],
     * displayTime: int // seconds to display
     * */
+     async reject  (){
+        this.socket.send(JSON.stringify({
+            action: "reject",
+            hostname: this.hostName,
+        }));
+        await this.hideModal(true);
+
+   }
+   handleReject  (message){
+    let next_player = message.next_player;
+    this.changePlayer(next_player, this.onDiceRolled.bind(this));
+   }
     showModal(playerIndex, title, subTitle, message, buttons, displayTime) {
         return new Promise(resolve => {
             if (playerIndex === null) {
@@ -381,6 +419,8 @@ class GameView {
             eventMsg = this.players[nextPlayer].userName + " " + eventMsg;
             this.showModal(nextPlayer, title, landname, eventMsg, buttons);
         }
+       
+        
     }
 
 
@@ -390,22 +430,38 @@ class GameView {
     }
 
     handleTrade = function (message) {
-        console.log(message , this)
-        document.getElementById('trade').style.display = 'inherit';
-        document.getElementsByClassName('card-content-container')[0].style.display = 'none';
-        document.getElementById('accepttradebutton').style.display = 'none';
-        document.getElementById('rejecttradebutton').style.display = 'none';
+        console.log(message, this)
+        if(this.myPlayerIndex===this.currentPlayer){
+
+            document.getElementById('trade').style.display = 'inherit';
+            document.getElementsByClassName('card-content-container')[0].style.display = 'none';
+            document.getElementById('accepttradebutton').style.display = 'none';
+            document.getElementById('rejecttradebutton').style.display = 'none';
+        }
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
-
+        document.getElementById('trade-leftp-name').innerText= this.players[this.currentPlayer].fullName
        async function startTrade(currPlayer, playerSelected) {
         let data={currPlayer,playerSelected}
+
             document.getElementById('accepttradebutton').style.display = '';
             document.getElementById('rejecttradebutton').style.display = '';
         // 
+            let moneyGiven = document.getElementById('trade-leftp-money').value 
+            let moneyTaken=  document.getElementById('trade-rightp-money').value
+
+
+
 
             //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
-            // this.tradeSocket.send(JSON.stringify({data}))
+            this.tradeSocket.send(JSON.stringify({
+                currentPlayer, 
+                playerSelected, 
+                propertyGivenIndex,
+                propertyTakenIndex,
+                 moneyGiven, 
+                moneyTaken}))
+
 
         }
 
@@ -416,13 +472,15 @@ class GameView {
 
         proposeTrade.onclick = startTrade;
         cancelTrade.onclick = stopTrade;
-
-        let currPlayer = this.curr_player;
-        let dropdown = message.players_info.map((player_info) => {
-            if (player_info.index !== currPlayer)
-                return this.players[currPlayer];
-        });
-        for (let i = 0; i < dropdown.length; i++) {
+        let currentPlayer = this.currentPlayer
+        
+        let dropdown =[]
+        for (let i = 0; i < message.players_info.length ; i++) {
+            if(i !==this.myPlayerIndex){
+                dropdown.push(this.players[i].fullName)
+            }
+        }
+        for (let i = 0; i < dropdown.length && dropdown[i]!==-1; i++) {
             let option = document.createElement("option");
             option.innerHTML = dropdown[i];
             let select = document.getElementById("select");
@@ -430,17 +488,35 @@ class GameView {
         }
 
         let playerSelected = document.getElementById('select').value;
+        let playerSelectedIndex = null
+        this.players.find((item,index) => {
+            if(playerSelected===item.fullName){
+                playerSelectedIndex=index
+                return true
+            }
+        })[0]
+        console.log(playerSelected,playerSelectedIndex)
 
-        let propertyCurrPlayer = message.owner.filter((item) => item === currPlayer);
-        let propertyRequestedPlayer = message.owner.filter((item) => item === playerSelected);
+        let propertyCurrPlayer = []
+        let propertyRequestedPlayer= [];
+        for(let i = 0 ; i<40; i++){
+            if(message.players_info[0].owners[i]===currentPlayer){
+                propertyCurrPlayer.push(i)
+            } 
+            if(message.players_info[0].owners[i]===playerSelectedIndex) 
+            propertyRequestedPlayer.push(i)
+        }
+        // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
+        console.log(propertyCurrPlayer,propertyRequestedPlayer)
         
         let table1 = document.createElement("table");
         let table2 = document.createElement("table");
         table1.style.display = "inline-block";
         table1.style.display = "inline-block";
-        let table = document.getElementById("table");
-        table.append(table1);
-        table.append(table2);
+        let table_1 = document.getElementById("trade-leftp-property");
+        let table_2 = document.getElementById("trade-rightp-property");
+        table_1.append(table1);
+        table_2.append(table2);
 
         for (let i = 0; i < propertyCurrPlayer.length; i++) {
             let tr = document.createElement("tr");
@@ -448,9 +524,15 @@ class GameView {
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
             let input = document.createElement("input");
-            input.type = checkbox;
-            input.setAttribute('value', propertyCurrPlayer[i]);
+            input.setAttribute( 'type','checkbox');
+
+            // input.setAttribute('value', propertyCurrPlayer[i]);
+            let label = document.createElement('label')
+            label.innerText = propertyCurrPlayer[i]
+            
+            input.style.display= 'unset'
             td1.append(input);
+            td1.append(label)
             td2.append(propertyCurrPlayer[i]);
             tr.append(td1);
         }
@@ -461,19 +543,22 @@ class GameView {
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
             let input = document.createElement("input");
-            input.type = checkbox;
-            input.setAttribute('value', propertyRequestedPlayer[i]);
+            input.style.display= 'unset'
+            input.setAttribute( 'type','checkbox');
+            // input.setAttribute('value', propertyRequestedPlayer[i]);
+            let label = document.createElement('label')
+            label.innerText = propertyRequestedPlayer[i]
             td1.append(input);
+            td1.append(label)
             td2.append(propertyRequestedPlayer[i]);
             tr.append(td1);
         }
 
 
 
-
-
     }
     async handleRollRes(message) {
+        console.log(message)
         let currPlayer = message.curr_player;
         let nextPlayer = message.next_player;
         let steps = message.steps;
@@ -556,6 +641,7 @@ class GameView {
     }
 
     handleCancel(message) {
+        console.log(message)
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
     }

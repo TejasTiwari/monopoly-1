@@ -45,12 +45,6 @@ class JoinView {
                 this.copyToClipboard();
             })
         }
-
-        const isProfileInited = document.getElementById("user-avatar").getAttribute("src").length !== 0;
-        if (!isProfileInited) {
-            const $addProfileButton = document.getElementById("init-profile");
-            $addProfileButton.classList.remove("hidden");
-        }
     }
 
     initWebSocket() {
@@ -91,11 +85,9 @@ class JoinView {
 
             this.friends.push(friend.name);
 
-            this.$usersContainer.innerHTML += `
-                <a href="/monopoly/profile/${friend.name}" target="_blank">
-                    <img class="joined-user-avatar" src="${friend.avatar}" title="${friend.name}">
-                </a>
-            `;
+            // this.$usersContainer.innerHTML += `
+            //     <img class="joined-user-avatar" src="${friend.avatar}" title="${friend.name}">
+            // `;
         }
     }
 

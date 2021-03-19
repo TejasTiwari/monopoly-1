@@ -79,12 +79,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
+ASGI_APPLICATION = 'webapps.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -160,3 +163,11 @@ print(('Email host:port = {host}:{port}, user={user}'.format(
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'userdata')
 MEDIA_URL = '/userdata/'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '738731448631-fhkcee115uhman4os2bphsmtcb8s6dme.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'hmTdhhlKwTK27dNgq3UXWOOy'
