@@ -176,8 +176,8 @@ def handle_propose(hostname, msg, games):
     initiator = msg["currentPlayer"]
     acceptor = msg["playerSelected"]
     
-    propertyGiven = msg["propertyGiven"]
-    propertyTaken = msg["propertyTaken"]
+    propertyGiven = msg["propertyGivenIndex"]
+    propertyTaken = msg["propertyTakenIndex"]
     
     moneyGiven = msg["moneyGiven"]
     moneyTaken = msg["moneyTaken"]
@@ -235,7 +235,7 @@ def handle_accept(hostname, msg, games):
 
 def handle_reject(hostname, msg, games):
     game = games[hostname]
-    next_player = game.get_current_player().get_index()
+    # next_player = game.get_current_player().get_index()
     
     Group(hostname).send({
         "text" : json.dumps({

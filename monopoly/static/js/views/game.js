@@ -9,7 +9,8 @@ class GameView {
 
         this.gameInProcess = true;
         this.message=null
-        this.afk = false
+        this.afk = false;
+        this.isTrading = false;
         // const trade = require('../game_views/')
     }
 
@@ -109,9 +110,9 @@ class GameView {
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
             "trade":this.handleTrade,
-            "propose":this.proposeTrade,
-            "accept": this.acceptTrade,
-            "reject": this.rejectTrade, 
+            "propose":this.proposeTradeHandler,
+            "accept": this.acceptTradeHandler,
+            "reject": this.rejectTradeHandler, 
         };
 
         if (!this.gameInProcess) return;
@@ -273,7 +274,7 @@ class GameView {
             }];
         (nextPlayer === this.myPlayerIndex && this.afk) ? this.afkHandler() :  undefined
 
-        this.showModal(nextPlayer, title, 'tradeView', this.diceMessage, button);
+        this.showModal(nextPlayer, title, '', this.diceMessage, button);
     }
 
     /*
@@ -429,7 +430,80 @@ class GameView {
         window.location = `http://${window.location.host}/monopoly/join`;
     }
 
-    handleTrade = function (message) {
+    async proposeTrade(currentPlayer, playerSelected, propertyGivenIndex,
+        propertyTakenIndex,
+         moneyGiven, 
+        moneyTaken)
+        {
+            this.isTrading =false
+            console.log('prop trade working')
+        this.socket.send(JSON.stringify({
+            action:'propose',
+            hostname: this.hostName,
+            currentPlayer, 
+            playerSelected, 
+            propertyGivenIndex,
+            propertyTakenIndex,
+             moneyGiven, 
+            moneyTaken}))
+
+    }
+    proposeTradeHandler(message){
+        console.log(message)
+        let {initiator , acceptor , propertyGiven, moneyGiven, moneyTaken, propertyTaken} = message
+        if(acceptor ===this.myPlayerIndex){
+            document.getElementById('trade').style.display = 'inherit';
+            document.getElementsByClassName('card-content-container')[0].style.display = 'none';
+            document.getElementById('proposetradebutton').style.display = 'none';
+            document.getElementById('canceltradebutton').style.display = 'none';
+            document.getElementById('trade-leftp-name').innerText= this.players[initiator].fullName;
+            document.getElementById('trade-rightp-name').innerText=  this.players[acceptor].fullName;
+            document.getElementById('trade-leftp-money').disabled = true;
+            document.getElementById('trade-leftp-money').setAttribute('value', moneyGiven);
+            document.getElementById('trade-rightp-money').disabled = true;
+            document.getElementById('trade-leftp-money').setAttribute('value', moneyTaken);
+            document.getElementById('trade-leftp-property').innerHTML = propertyGiven;
+            document.getElementById('trade-rightp-property').innerHTML = propertyTaken;
+         const acceptTrade =   document.getElementById('accepttradebutton');
+         acceptTrade.style.display = '';
+            acceptTrade.onclick =acceptTradeHandler.bind(this)
+
+            async function acceptTradeHandler(){
+                this.acceptTrade()
+            }
+        const rejectTrade=  document.getElementById('rejecttradebutton');
+        rejectTrade.style.display = '';
+        rejectTrade.onclick =reject_trade.bind(this);
+      function reject_trade(){
+          
+            if(acceptor === this.myPlayerIndex){
+                document.getElementById('trade').style.display = 'none';
+                document.getElementsByClassName('card-content-container')[0].style.display = '';
+            }
+            else if(initiator ===this.myPlayerIndex)
+            document.getElementsByClassName('card-content-container')[0].style.display = '';
+            
+            else{
+                this.showModal(initiator ,  'trade with' + this.players[acceptor].fullName + 'was rejected', '', '', [] )
+              }
+            
+        }
+        }
+        else if(initiator === this.myPlayerIndex){
+            document.getElementsByClassName('card-content-container')[0].style.display = '';
+
+        }
+        else this.showModal(initiator ,this.players[initiator].fullName +  'trading with ' + this.players[acceptor].fullName, 'Please wait', '', [] )
+    }
+    acceptTrade(){
+        this.socket.send(JSON.stringify({
+            action: "accept",
+            hostname: this.hostName,
+        }));
+    }
+
+    handleTrade  (message) {
+
         console.log(message, this)
         if(this.myPlayerIndex===this.currentPlayer){
 
@@ -441,37 +515,61 @@ class GameView {
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
         document.getElementById('trade-leftp-name').innerText= this.players[this.currentPlayer].fullName
-       async function startTrade(currPlayer, playerSelected) {
-        let data={currPlayer,playerSelected}
-
-            document.getElementById('accepttradebutton').style.display = '';
-            document.getElementById('rejecttradebutton').style.display = '';
+        // const that = this
+       function startTrade() {
+        this.isTrading = true
+        let currentPlayer = this.currentPlayer
+        let playerSelected = playerSelectedIndex
+            // document.getElementById('accepttradebutton').style.display = '';
+            // document.getElementById('rejecttradebutton').style.display = '';
+            document.getElementById('proposetradebutton').disabled = '';
+            document.getElementById('proposetradebutton').textContent = 'Trade Proposed';
+        // 
         // 
             let moneyGiven = document.getElementById('trade-leftp-money').value 
             let moneyTaken=  document.getElementById('trade-rightp-money').value
 
+        let propertyGivableIndex = document.getElementsByClassName('leftp-check')
+        let propertyGivenIndex = []
+        for( let i = 0 ; i<propertyGivableIndex.length; i++){
+            if(propertyGivableIndex[i].checked === true){
+                propertyGivenIndex.push(propertyGivableIndex[i].value)
+            }
+        }
+        let propertyTakeableIndex = document.getElementsByClassName('rightp-check')
+        let propertyTakenIndex = []
+        for( let i = 0 ; i<propertyTakeableIndex.length; i++){
+            if(propertyTakeableIndex[i].checked === true){
+                propertyTakenIndex.push(propertyTakeableIndex[i].value)
+            }
+        }
+        console.log(currentPlayer, playerSelected, propertyGivenIndex,
+            propertyTakenIndex,
+             moneyGiven, 
+            moneyTaken)
+            document.getElementsByClassName('card-content-container')[0].style.display = '';
+            // this.showModal(currentPlayer, this.players[playerSelected].fullName + ' is deciding...', 'Please wait.','' , [] )
 
-
+            document.getElementById('trade').style.display = 'none';
+        this.proposeTrade(currentPlayer, playerSelected, propertyGivenIndex,
+            propertyTakenIndex,
+             moneyGiven, 
+            moneyTaken)
+           
 
             //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
-            this.tradeSocket.send(JSON.stringify({
-                currentPlayer, 
-                playerSelected, 
-                propertyGivenIndex,
-                propertyTakenIndex,
-                 moneyGiven, 
-                moneyTaken}))
-
+            
 
         }
 
         function stopTrade() {
             document.getElementById('trade').style.display = 'none';
             document.getElementsByClassName('card-content-container')[0].style.display = 'inherit';
+        
         }
 
-        proposeTrade.onclick = startTrade;
-        cancelTrade.onclick = stopTrade;
+        proposeTrade.onclick = startTrade.bind(this);
+        cancelTrade.onclick = stopTrade.bind(this);
         let currentPlayer = this.currentPlayer
         
         let dropdown =[]
@@ -523,7 +621,9 @@ class GameView {
             table1.append(tr);
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
-            let input = document.createElement("input");
+            let input = document.createElement("input")
+            input.setAttribute('class', 'leftp-check');
+            input.setAttribute('value',propertyCurrPlayer[i] )
             input.setAttribute( 'type','checkbox');
 
             // input.setAttribute('value', propertyCurrPlayer[i]);
@@ -542,7 +642,9 @@ class GameView {
             table2.append(tr);
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
-            let input = document.createElement("input");
+            let input = document.createElement("input")
+            input.setAttribute('class', 'rightp-check');
+            input.setAttribute('value',propertyRequestedPlayer[i] )
             input.style.display= 'unset'
             input.setAttribute( 'type','checkbox');
             // input.setAttribute('value', propertyRequestedPlayer[i]);
@@ -558,14 +660,14 @@ class GameView {
 
     }
     async handleRollRes(message) {
-        console.log(message)
+        
         let currPlayer = message.curr_player;
         let nextPlayer = message.next_player;
         let steps = message.steps;
         let newPos = message.new_pos;
         let eventMsg = message.result;
-        let title = message.title;
-        let landname = message.landname;
+        let title = this.isTrading ? 'Player is deciding' :message.title;
+        let landname = this.isTrading? 'Please wait': message.landname;
         let rollResMsg = this.players[currPlayer].userName + " gets a roll result " + steps.toString();
 
         await this.showModal(currPlayer, this.players[currPlayer].userName + " got " + steps.toString(), "", "", [], 2);
@@ -595,7 +697,7 @@ class GameView {
                 text: "Trade",
                 callback: this.trade.bind(this)
             }] : [];
-
+       
             this.showModal(currPlayer, title, landname, this.players[currPlayer].userName + eventMsg, buttons);
         } else {
             if (message.is_cash_change === "true") {
@@ -618,7 +720,7 @@ class GameView {
         const {curr_player, curr_cash, tile_id} = message;
         this.changeCashAmount(curr_cash);
         this.gameController.addProperty(PropertyManager.PROPERTY_OWNER_MARK, tile_id, curr_player);
-        // console.log(PropertyManager.models)
+       
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
     }
@@ -641,7 +743,7 @@ class GameView {
     }
 
     handleCancel(message) {
-        console.log(message)
+      
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
     }
@@ -690,7 +792,7 @@ class GameView {
     }
 
     async trade (){
-        // console.log(this)
+      
         this.socket.send(JSON.stringify({
             action: "trade",
             hostname: this.hostName,

@@ -352,6 +352,16 @@
     z-index: 100;
 }
 
+#afk {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 9px;
+    opacity: 0.8;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
 #controls-container svg {
     border-radius: 29px;
     background: #eeeeee;
@@ -503,11 +513,11 @@
     margin-right: 2em;
 }*/
 
-#proposetradebutton {
+#proposetradebutton, #accepttradebutton{
     background-color: #4CAF50;
 }
 
-#canceltradebutton {
+#canceltradebutton, #rejecttradebutton{
     background-color: #ca322d;
 }
 
