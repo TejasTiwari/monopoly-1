@@ -173,6 +173,7 @@ def handle_trade(hostname, msg, games):
 
 def handle_propose(hostname, msg, games):
     game = games[hostname]
+    players = game.get_players()
     initiator = msg["currentPlayer"]
     acceptor = msg["playerSelected"]
     
@@ -181,6 +182,15 @@ def handle_propose(hostname, msg, games):
     
     moneyGiven = msg["moneyGiven"]
     moneyTaken = msg["moneyTaken"]
+
+    players_info = []
+    for player in players:
+        props = []
+        player_props = list(player.get_properties())
+        for prop in player_props:
+            props.append({
+               "1" : 1 
+            })
     
     Group(hostname).send({
         "text": build_propose_msg(initiator, acceptor, propertyGiven, propertyTaken, moneyGiven, moneyTaken)
@@ -250,6 +260,7 @@ def handle_end_game(hostname, games):
     print(game)
     players = game.get_players()
     all_asset = []
+    asset_dicts = {}
       
     curr_player = game.get_current_player().get_index()
     for player in players:
