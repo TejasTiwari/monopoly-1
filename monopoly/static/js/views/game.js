@@ -142,29 +142,26 @@ class GameView {
       this.afkButton.style.backgroundColor = "red";
     }
   }
-  afkHandler() {
+ async afkHandler() {
     // console.log(this)
     if (this.afk && this.currentPlayer === this.myPlayerIndex) {
       document.getElementById("roll").checked = true;
-      document.querySelector("#modal-buttons-container button").disabled = true;
-      document.querySelector("#modal-buttons-container button").innerText =
-        "Auto roll...";
+    //   document.querySelector("#modal-buttons-container button").disabled = true;
+    //   document.querySelector("#modal-buttons-container button").innerText =
+    //     "Auto roll...";
 
       this.audioManager.play("dice");
-      console.log("esvsv", this);
-      this.socket = new WebSocket(
-        `ws://${window.location.host}/game/${this.hostName}`
-      );
-      this.onDiceRolled();
-      this.socket.onmessage = (event) => {
+    await this.onDiceRolled();
+    await this.cancelDecision();
+      this.socket.onmessage =  (event) => {
         const message = JSON.parse(event.data);
-        this.handleRollRes(message);
+        if(message.action==='roll')
+       this.handleRollRes(message);
+       if(message.action==='canel_change')
+       this.handleCancel(message);
+
       };
-      this.cancelDecision();
-      this.socket.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        this.handleCancel(message);
-      };
+     
     }
   }
 
@@ -451,6 +448,10 @@ class GameView {
                 text: "No",
                 callback: this.cancelDecision.bind(this),
               },
+              {
+                text: "Trade",
+                callback: this.trade.bind(this),
+              }
             ]
           : [];
       eventMsg = this.players[nextPlayer].userName + " " + eventMsg;
