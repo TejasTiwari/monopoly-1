@@ -306,6 +306,7 @@ class BoardController {
                                         modalElem.innerHTML = `<h1>${modalData.name}</h1>`
                                         modalElem.innerHTML += `<h3>${modalData.desc}</h3>`
                                         modalElem.innerHTML += `<h4>${modalData.cost}</h4>`
+                                        modalElem.innerHTML += `<img src='../static/images/${modelData.name}.jpg'>`
                                     })
                                 }
                               },
