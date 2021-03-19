@@ -15,13 +15,21 @@ class GameController {
         });
 
         this.boardController.drawBoard(onBoardPainted);
-        // const onMouseMove = event => {
-        //     console.log('object')
-        //     this.boardController.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        //     this.boardController.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        // }
+        const onMouseMove = event => {
+            this.boardController.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            this.boardController.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+            console.log("checking for mouse")
+            console.log(this)
+            document.getElementById("modal-popupbox-id").style.visibility = "initial";
+        }
 
-        // window.addEventListener('mousemove', onMouseMove, false);
+        const closeModal = () => {
+            document.getElementById("modal-popupbox-id").style.visibility = "hidden";
+        }
+
+        let closeButton = document.querySelector(".close-button");
+        closeButton.addEventListener("click", closeModal);
+        window.addEventListener("click", onmousemove, false)
     }
 
     addPlayer(count, initPos) {
