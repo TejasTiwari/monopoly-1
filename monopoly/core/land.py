@@ -133,6 +133,10 @@ class ConstructionLand(object):
         print('debug114, rent is', ret)
         return ret
 
+    def get_json(self):
+        return {
+            ""
+        }
 
 class Infra(object):
     # _price = 0
@@ -159,6 +163,11 @@ class Infra(object):
 
     def get_evaluation(self):
         return self.get_price()
+
+    def get_json(self):
+        return {
+            "price" : self.get_evaluation(),
+        }
 
 
 class StartLand(object):

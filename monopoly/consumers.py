@@ -97,6 +97,19 @@ def ws_message(message):
         handle_chat(hostname, msg)
     if action == "trade":
         handle_trade(hostname, msg, games)
+        
+    # broadcast trade details
+    if action == "propose":
+        handle_propose(hostname, msg, games)
+        
+    # make transactions after trade
+    if action == "accept":
+        handle_accept(hostname, msg, games)
+        
+    # broadcast rejection message to the group
+    if action == "reject":
+        handle_reject(hostname, msg, games)
+        
     if action == "end_game":
         handle_end_game(hostname, games)
 

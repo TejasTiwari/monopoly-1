@@ -15,7 +15,7 @@ class Game(object):
 
     def __init__(self, player_num):
         # assert 0 < player_num <= 4
-        if player_num <= 0 or player_num > 2:
+        if player_num <= 0 or player_num > 6:
             self.notify_error("In correct player number, should be 1-4 "
                               "players.")
             return

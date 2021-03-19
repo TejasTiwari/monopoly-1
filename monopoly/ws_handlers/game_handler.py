@@ -171,6 +171,80 @@ def handle_trade(hostname, msg, games):
     })
 
 
+def handle_propose(hostname, msg, games):
+    game = games[hostname]
+    initiator = msg["currentPlayer"]
+    acceptor = msg["playerSelected"]
+    
+    propertyGiven = msg["propertyGiven"]
+    propertyTaken = msg["propertyTaken"]
+    
+    moneyGiven = msg["moneyGiven"]
+    moneyTaken = msg["moneyTaken"]
+    
+    Group(hostname).send({
+        "text": build_propose_msg(initiator, acceptor, propertyGiven, propertyTaken, moneyGiven, moneyTaken)
+    })
+    print({
+        "text" : build_trade_details_msg(hostname, players_info)
+    })
+
+def handle_accept(hostname, msg, games):
+    game = games[hostname]
+    players = game.get_players()
+    
+    initiator_index = int(msg["currentPlayer"])
+    acceptor_index = int(msg["playerSelected"])
+    
+    propertyGiven_index = int(msg["propertyGiven"])
+    propertyTaken_index = int(msg["propertyTaken"])
+    
+    moneyGiven = int(msg["moneyGiven"])
+    moneyTaken = int(msg["moneyTaken"])
+    
+    for player in players:
+        if player.get_index() == initiator_index:
+            player.add_money(moneyTaken)
+            player.deduct_money(moneyGiven)
+        
+        if player.get_index() == acceptor_index:
+            player.add_money(moneyGiven)
+            player.deduct_money(moneyTaken)
+            
+    for i in range(self._board.get_grid_num()):
+        land = self._board.get_land(i)
+        if land == propertyGiven_index:
+            land.get_content().set_owner(acceptor_index)
+            
+        if land == propertyTaken_index:
+            land.get_content().set_owner(initiator_index)
+            
+    Group(hostname).send({
+        "text" : json.dumps({
+            "action" : "propose",
+            "msg" : "Trade successful!"
+        })
+    })
+    
+    print({
+        "text" : json.dumps({
+            "action" : "propose",
+            "msg" : "Trade successful!"
+        })
+    })
+
+def handle_reject(hostname, msg, games):
+    game = games[hostname]
+    next_player = game.get_current_player().get_index()
+    
+    Group(hostname).send({
+        "text" : json.dumps({
+            "action" : "reject",
+            "nextPlayer" : next_player
+        })
+    })
+
+
 def handle_end_game(hostname, games):
     game = games[hostname]
     print(game)
@@ -263,6 +337,18 @@ def build_trade_details_msg(hostname, players):
     context = {
         "action" : "trade",
         "players_info" : players
+    }
+    return json.dumps(context)
+
+def build_propose_msg(initiator, acceptor, propertyGiven, propertyTaken, moneyGiven, moneyTaken):
+    context = {
+        "action" : "propose",
+        "initiator" : initiator,
+        "acceptor" : acceptor,
+        "propertyGiven" : propertyGiven,
+        "propertyTaken" : propertyTaken,
+        "moneyGiven" : moneyGiven,
+        "moneyTaken" : moneyTaken, 
     }
     return json.dumps(context)
 
