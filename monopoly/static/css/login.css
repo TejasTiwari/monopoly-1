@@ -53,6 +53,19 @@ input {
     margin-bottom: 0;
 }
 
+#google-login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e6e6e6;
+    height: 58px;
+    border-top: 1px solid #ebebeb;
+    font-size: 16px;
+    color: #175199;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
 #form-container {
     margin: 0;
     position: relative;

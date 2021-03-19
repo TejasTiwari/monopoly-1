@@ -39,7 +39,8 @@
             <a href="/monopoly/register">Create New Account</a>
             {% endif %}
         </span>
-        <a href="{% url "social:begin" "google-oauth2" %}">Login with Google</a>
+       <span id = "google-login"> 
+        <a href="{% url "social:begin" "google-oauth2" %}" align="center"> <img  src='/static/images/google_logo.png' width="50px" /> Login with Google</a></span>
     </div>
 </div>
 {% endblock %}

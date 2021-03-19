@@ -85,9 +85,9 @@ class JoinView {
 
             this.friends.push(friend.name);
 
-            // this.$usersContainer.innerHTML += `
-            //     <img class="joined-user-avatar" src="${friend.avatar}" title="${friend.name}">
-            // `;
+            this.$usersContainer.innerHTML += `
+                <img class="joined-user-avatar" src="${friend.avatar}" title="${friend.name}">
+            `;
         }
     }
 
