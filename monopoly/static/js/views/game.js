@@ -30,7 +30,7 @@ class GameView {
 
         this.afkButton = document.getElementById('afk')
         this.afkButton.style.backgroundColor='red'
-        this.afkButton.addEventListener('click', this.afkHandler.bind(this))
+        this.afkButton.addEventListener('click', this.afkState.bind(this))
 
 
         if (this.userName === this.hostName) {
@@ -109,6 +109,9 @@ class GameView {
             "game_end": this.handleGameEnd,
             "chat": this.handleChat,
             "trade":this.handleTrade,
+            "propose":this.proposeTrade,
+            "accept": this.acceptTrade,
+            "reject": this.rejectTrade, 
         };
 
         if (!this.gameInProcess) return;
@@ -116,24 +119,39 @@ class GameView {
         messageHandlers[message.action].bind(this)(message);
         // console.log(this)
     }
-    afkHandler(){  
-        document.getElementById("roll").checked = true;
+    afkState(){
+        this.afk = !(this.afk)
 
-                    this.audioManager.play("dice");     
         if(this.afk){
             this.afkButton.style.backgroundColor='green'
-            document.querySelector("#modal-buttons-container button").disabled = true;
-            document.querySelector("#modal-buttons-container button").innerText = "Auto roll...";
         }else{
             this.afkButton.style.backgroundColor='red'
         }
+        
+    }
+     afkHandler(){  
+            
+        
         // console.log(this)
         if(this.afk && this.currentPlayer === this.myPlayerIndex)
-        {
+        {   document.getElementById("roll").checked = true;
+        document.querySelector("#modal-buttons-container button").disabled = true;
+        document.querySelector("#modal-buttons-container button").innerText = "Auto roll...";
+
+        this.audioManager.play("dice"); 
             console.log('esvsv', this)
-            this.onDiceRolled();
+        this.socket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`);
+         this.onDiceRolled();
+         this.socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);                
+                this.handleRollRes(message)
+            };
+           this.cancelDecision()
+            this.socket.onmessage = (event) => {
+                  const message = JSON.parse(event.data);                
+                  this.handleCancel(message)
+              };
         }
-        this.afk = !(this.afk)
 
     }
 
@@ -199,6 +217,7 @@ class GameView {
     * */
     changePlayer(nextPlayer, onDiceRolled) {
         let tradeView;
+        console.log('change player')
         // update user indicator
         if (this.currentPlayer !== null) {
             let $currentUserGroup = document.getElementById(`user-group-${this.currentPlayer}`);
@@ -222,19 +241,19 @@ class GameView {
         //     }      
         // };
      
-       console.log('ok', this)
-      if(this.currPlayer === nextPlayer){ 
-          setTimeout(()=>{
-           this.players = this.players.filter((e,index)=>index!==nextPlayer)
-           if( this.currentPlayer ===this.players.length){
-               this.currentPlayer = 0;
-            }
-            this.changePlayer(this.currPlayer,onDiceRolled)
+    //    console.log('ok', this)
+    //   if(this.currPlayer === nextPlayer){ 
+    //       setTimeout(()=>{
+    //        this.players = this.players.filter((e,index)=>index!==nextPlayer)
+    //        if( this.currentPlayer ===this.players.length){
+    //            this.currentPlayer = 0;
+    //         }
+    //         this.changePlayer(this.currPlayer,onDiceRolled)
             
-            this.socket.close()
-            window.location = `http://${window.location.host}/monopoly/join`;
+    //         this.socket.close()
+    //         window.location = `http://${window.location.host}/monopoly/join`;
 
-    },4000)}
+    // },4000)}
         // role dice
         const button = (nextPlayer !== this.myPlayerIndex) ? [] :
             [{
@@ -252,6 +271,8 @@ class GameView {
                 text: "Trade",
                 callback: this.trade.bind(this)
             }];
+        (nextPlayer === this.myPlayerIndex && this.afk) ? this.afkHandler() :  undefined
+
         this.showModal(nextPlayer, title, 'tradeView', this.diceMessage, button);
     }
 
@@ -265,6 +286,18 @@ class GameView {
     * }],
     * displayTime: int // seconds to display
     * */
+     async reject  (){
+        this.socket.send(JSON.stringify({
+            action: "reject",
+            hostname: this.hostName,
+        }));
+        await this.hideModal(true);
+
+   }
+   handleReject  (message){
+    let next_player = message.next_player;
+    this.changePlayer(next_player, this.onDiceRolled.bind(this));
+   }
     showModal(playerIndex, title, subTitle, message, buttons, displayTime) {
         return new Promise(resolve => {
             if (playerIndex === null) {
@@ -386,6 +419,8 @@ class GameView {
             eventMsg = this.players[nextPlayer].userName + " " + eventMsg;
             this.showModal(nextPlayer, title, landname, eventMsg, buttons);
         }
+       
+        
     }
 
 
@@ -405,15 +440,28 @@ class GameView {
         }
         let proposeTrade = document.getElementById("proposetradebutton");
         let cancelTrade = document.getElementById("canceltradebutton");
-
+        document.getElementById('trade-leftp-name').innerText= this.players[this.currentPlayer].fullName
        async function startTrade(currPlayer, playerSelected) {
         let data={currPlayer,playerSelected}
+
             document.getElementById('accepttradebutton').style.display = '';
             document.getElementById('rejecttradebutton').style.display = '';
         // 
+            let moneyGiven = document.getElementById('trade-leftp-money').value 
+            let moneyTaken=  document.getElementById('trade-rightp-money').value
+
+
+
 
             //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
-            // this.tradeSocket.send(JSON.stringify({data}))
+            this.tradeSocket.send(JSON.stringify({
+                currentPlayer, 
+                playerSelected, 
+                propertyGivenIndex,
+                propertyTakenIndex,
+                 moneyGiven, 
+                moneyTaken}))
+
 
         }
 
@@ -440,15 +488,23 @@ class GameView {
         }
 
         let playerSelected = document.getElementById('select').value;
-      let  playerSelectedIndex = this.players.filter(item => playerSelected===item.fullName)
+        let playerSelectedIndex = null
+        this.players.find((item,index) => {
+            if(playerSelected===item.fullName){
+                playerSelectedIndex=index
+                return true
+            }
+        })[0]
+        console.log(playerSelected,playerSelectedIndex)
+
         let propertyCurrPlayer = []
         let propertyRequestedPlayer= [];
         for(let i = 0 ; i<40; i++){
             if(message.players_info[0].owners[i]===currentPlayer){
-                propertyCurrPlayer.append(i)
+                propertyCurrPlayer.push(i)
             } 
-            if(message.players_info[0].owners[i]===playerSelected) 
-            propertyRequestedPlayer.append(i)
+            if(message.players_info[0].owners[i]===playerSelectedIndex) 
+            propertyRequestedPlayer.push(i)
         }
         // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
         console.log(propertyCurrPlayer,propertyRequestedPlayer)
@@ -468,9 +524,15 @@ class GameView {
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
             let input = document.createElement("input");
-            input.type = checkbox;
-            input.setAttribute('value', propertyCurrPlayer[i]);
+            input.setAttribute( 'type','checkbox');
+
+            // input.setAttribute('value', propertyCurrPlayer[i]);
+            let label = document.createElement('label')
+            label.innerText = propertyCurrPlayer[i]
+            
+            input.style.display= 'unset'
             td1.append(input);
+            td1.append(label)
             td2.append(propertyCurrPlayer[i]);
             tr.append(td1);
         }
@@ -481,19 +543,22 @@ class GameView {
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
             let input = document.createElement("input");
-            input.type = checkbox;
-            input.setAttribute('value', propertyRequestedPlayer[i]);
+            input.style.display= 'unset'
+            input.setAttribute( 'type','checkbox');
+            // input.setAttribute('value', propertyRequestedPlayer[i]);
+            let label = document.createElement('label')
+            label.innerText = propertyRequestedPlayer[i]
             td1.append(input);
+            td1.append(label)
             td2.append(propertyRequestedPlayer[i]);
             tr.append(td1);
         }
 
 
 
-
-
     }
     async handleRollRes(message) {
+        console.log(message)
         let currPlayer = message.curr_player;
         let nextPlayer = message.next_player;
         let steps = message.steps;
@@ -576,6 +641,7 @@ class GameView {
     }
 
     handleCancel(message) {
+        console.log(message)
         let next_player = message.next_player;
         this.changePlayer(next_player, this.onDiceRolled.bind(this));
     }
