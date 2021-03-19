@@ -24,7 +24,12 @@ class ConfirmRegistrationView(View):
 
         # Otherwise token was valid, activate the user.
         user.is_active = True
-        user.save()
+        try:
+            user.save()
+        except ValueError:
+            res = {'active_page': 'register',
+                   "error": "User with the same email id already exists."}
+            return render(request, self.template_name, res)
         login(request, user)
 
         return redirect("/monopoly/join")

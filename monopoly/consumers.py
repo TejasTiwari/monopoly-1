@@ -8,15 +8,31 @@ from django.contrib.auth.models import User
 from monopoly.core.game import *
 
 import json
+import pickle
 from monopoly.ws_handlers.game_handler import *
 from monopoly.ws_handlers.game_change_handler import *
 
 # Connected to websocket.connect
 # @login_required
 
-rooms = {}
-games = {}
-changehandlers = {}
+try:
+    # Getting back the objects:
+	with open('monopoly/rooms.pkl', 'rb') as f:  # Python 3: open(..., 'rb')
+		rooms = pickle.load(f)
+except (EOFError, FileNotFoundError):
+	rooms = {}
+try:
+    # Getting back the objects:
+	with open('monopoly/games.pkl', 'rb') as f:  # Python 3: open(..., 'rb')
+		games = pickle.load(f)
+except (EOFError, FileNotFoundError):
+	games = {}
+try:
+    # Getting back the objects:
+	with open('monopoly/changehandlers.pkl', 'rb') as f:  # Python 3: open(..., 'rb')
+		changehandlers = pickle.load(f)
+except (EOFError, FileNotFoundError):
+	changehandlers = {}
 
 
 def ws_message(message):
@@ -173,6 +189,8 @@ def add_player(room_name, player_name):
         return False
 
     rooms[room_name].add(player_name)
+    with open('monopoly/rooms.pkl', 'wb') as f:
+            pickle.dump(rooms, f)
     return True
 
 
@@ -183,14 +201,15 @@ def handle_start(hostname):
         player_num = len(players)
         game = Game(player_num)
         games[hostname] = game
-
+        with open('monopoly/games.pkl', 'wb') as f:
+            pickle.dump(games, f)
         change_handler = ChangeHandler(game, hostname)
         game.add_game_change_listner(change_handler)
         changehandlers[hostname] = change_handler
-
+    with open('monopoly/changehandlers.pkl', 'wb') as f:
+            pickle.dump(changehandlers, f)
     Group(hostname).send({
         "text": build_start_msg()
     })
     print(len(games))
     print("start finish")
-    
