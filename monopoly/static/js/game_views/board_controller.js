@@ -298,7 +298,16 @@ class BoardController {
                                 );
                         
                                 if (isIntersected) {
-                                  console.log('yay', square)
+                                    fetch('/static/modal_data.json').then(response => response)
+                                    .then(data => data.json())
+                                    .then(modalDataJSON => {
+                                        const modalData = modalDataJSON[square.id]
+                                        const modalElem = document.getElementById('modal-popup-box')
+                                        modalElem.innerHTML = `<h1>${modalData.name}</h1>`
+                                        modalElem.innerHTML += `<h3>${modalData.desc}</h3>`
+                                        modalElem.innerHTML += `<h4>${modalData.cost}</h4>`
+                                        modalElem.innerHTML += `<img src='../static/images/${modelData.name}.jpg'>`
+                                    })
                                 }
                               },
                               false
