@@ -1,3 +1,5 @@
+import pickle
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import login, authenticate, logout
@@ -11,12 +13,20 @@ class LoginView(View):
     template_name = 'login_view.html'
 
     def get(self, request, *args, **kwargs):
+        try:
+            logout(request)
+        except Exception:
+            pass
         return render(request, self.template_name, {
             "active_page": "login",
             "error": None
         })
 
     def post(self, request, *args, **kwargs):
+        try:
+            logout(request)
+        except Exception:
+            pass
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
@@ -40,12 +50,24 @@ class LoginView(View):
             return render(request, self.template_name, res)
 
 def logout_view(request):
-    logout(request)
-    profile, created = Profile.objects.get_or_create(user=request.user)
-    profile.hostname = None
-    profile.save()
-    del games[profile.hostname]
-    del rooms[profile.hostname]
+    if not request.user.is_anonymous:
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        try:
+            del games[profile.hostname]
+            with open('monopoly/games.pkl', 'wb') as f:
+                pickle.dump(games, f)
+        except KeyError:
+            pass
+        try:
+            del rooms[str(request.user)]
+            print(rooms)
+            with open('monopoly/rooms.pkl', 'wb') as f:
+                pickle.dump(rooms, f)
+        except KeyError:
+            pass
+        profile.hostname = None
+        profile.save()
+        logout(request)
     # Redirect to a success page.
     res = {'active_page': 'login',
            "error": "By logging out you have quit the game you were participating in if any."}

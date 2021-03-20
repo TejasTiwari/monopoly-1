@@ -10,6 +10,7 @@ class JoinView(View):
     def get(self, request, *args, **kwargs):
         print((request.path))
         user = request.user
+        print(kwargs)
         host_name = kwargs.get('host_name', user.username)
         try:
             profile = Profile.objects.get(user=user)
