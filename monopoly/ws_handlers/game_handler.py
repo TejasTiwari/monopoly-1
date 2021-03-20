@@ -186,9 +186,9 @@ def handle_propose(hostname, msg, games):
     Group(hostname).send({
         "text": build_propose_msg(initiator, acceptor, propertyGiven, propertyTaken, moneyGiven, moneyTaken)
     })
-    print({
-        "text" : build_trade_details_msg(hostname, players_info)
-    })
+    # print({
+    #     "text" : build_trade_details_msg(hostname, players_info)
+    # })
 
 def handle_accept(hostname, msg, games):
     game = games[hostname]

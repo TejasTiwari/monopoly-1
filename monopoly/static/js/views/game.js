@@ -28,9 +28,9 @@ class GameView {
     this.$helpOverlay = document.getElementById("rules-overlay");
     this.showingHelp = false;
 
-    this.afkButton = document.getElementById("afk");
-    this.afkButton.style.backgroundColor = "red";
-    this.afkButton.addEventListener("click", this.afkState.bind(this));
+    // this.afkButton = document.getElementById("afk");
+    // this.afkButton.style.backgroundColor = "red";
+    // this.afkButton.addEventListener("click", this.afkState.bind(this));
 
     if (this.userName === this.hostName) {
       this.$exitControl = document.getElementById("exit-control");
@@ -70,6 +70,7 @@ class GameView {
   }
 
   initBoard() {
+
     this.gameController = new GameController({
       // The DOM element in which the drawing will happen.
       containerEl: document.getElementById("game-container"),
@@ -87,6 +88,12 @@ class GameView {
       },
       false
     );
+    fetch('/static/modal_data.json').then(response => response)
+                                .then(data => data.json())
+                                .then(modalDataJSON => {
+                                    this.modalData = modalDataJSON
+                             })
+                             this.modalData
   }
 
   initWebSocket() {
@@ -300,9 +307,9 @@ class GameView {
               callback: this.trade.bind(this),
             },
           ];
-    (nextPlayer === this.myPlayerIndex && this.afk)
-      ? this.afkHandler()
-      : undefined;
+    // (nextPlayer === this.myPlayerIndex && this.afk)
+    //   ? this.afkHandler()
+    //   : undefined;
 
     this.showModal(nextPlayer, title, "", this.diceMessage, button);
   }
@@ -681,6 +688,7 @@ class GameView {
   }
 
   handleTrade(message) {
+
     console.log(message, this);
     if (this.myPlayerIndex === this.currentPlayer) {
       document.getElementById("trade").style.display = "inherit";
@@ -768,10 +776,17 @@ class GameView {
         dropdown.push(this.players[i].fullName);
       }
     }
+    
+    let select = document.getElementById('select')
+    if (!select) {
+      select = document.createElement("select");
+      select.setAttribute("id", "select")
+    }
+    
+    document.getElementById('trade-rightp-name').append(select)
     for (let i = 0; i < dropdown.length && dropdown[i] !== -1; i++) {
       let option = document.createElement("option");
       option.innerHTML = dropdown[i];
-      let select = document.getElementById("select");
       select.append(option);
     }
 
@@ -789,7 +804,9 @@ class GameView {
     let propertyRequestedPlayer = [];
     for (let i = 0; i < 40; i++) {
       if (message.players_info[0].owners[i] === currentPlayer) {
+      
         propertyCurrPlayer.push(i);
+
       }
       if (message.players_info[0].owners[i] === playerSelectedIndex)
         propertyRequestedPlayer.push(i);
@@ -803,6 +820,8 @@ class GameView {
     table1.style.display = "inline-block";
     let table_1 = document.getElementById("trade-leftp-property");
     let table_2 = document.getElementById("trade-rightp-property");
+    table_1.innerHTML=''
+    table_2.innerHTML=''
     table_1.append(table1);
     table_2.append(table2);
 
@@ -813,17 +832,19 @@ class GameView {
       let td2 = document.createElement("td");
       let input = document.createElement("input");
       input.setAttribute("class", "leftp-check");
-      input.setAttribute("value", propertyCurrPlayer[i]);
+      let propertyLabel = this.modalData[propertyCurrPlayer[i]].name;
+     
+      input.setAttribute("value", propertyLabel);
       input.setAttribute("type", "checkbox");
 
       // input.setAttribute('value', propertyCurrPlayer[i]);
       let label = document.createElement("label");
-      label.innerText = propertyCurrPlayer[i];
+      label.innerText = propertyLabel
 
       input.style.display = "unset";
       td1.append(input);
       td1.append(label);
-      td2.append(propertyCurrPlayer[i]);
+      // td2.append(propertyCurrPlayer[i]);
       tr.append(td1);
     }
 
@@ -834,15 +855,18 @@ class GameView {
       let td2 = document.createElement("td");
       let input = document.createElement("input");
       input.setAttribute("class", "rightp-check");
-      input.setAttribute("value", propertyRequestedPlayer[i]);
+      let propertyLabel = this.modalData[propertyRequestedPlayer[i]].name;
+     
+      input.setAttribute("value", propertyLabel);
+      
       input.style.display = "unset";
       input.setAttribute("type", "checkbox");
       // input.setAttribute('value', propertyRequestedPlayer[i]);
       let label = document.createElement("label");
-      label.innerText = propertyRequestedPlayer[i];
+      label.innerText = propertyLabel;
       td1.append(input);
       td1.append(label);
-      td2.append(propertyRequestedPlayer[i]);
+      // td2.append(propertyLabel);
       tr.append(td1);
     }
   }

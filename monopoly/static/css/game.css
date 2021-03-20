@@ -103,6 +103,10 @@
     top: 30%;
     bottom: auto;
     overflow: initial;
+    padding: 25px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #modal-message-container {
@@ -362,6 +366,7 @@
     cursor: pointer;
 }
 
+
 #controls-container svg {
     border-radius: 29px;
     background: #eeeeee;
@@ -507,6 +512,19 @@
     cursor: pointer;
     height: 2em;
     text-align: center;
+    
+}
+.trade-cell{
+    text-align: center;
+    
+}
+#trade-rightp-money{
+    padding:8px 10px;
+    border-radius: 25px;
+}
+#trade-leftp-money{
+    padding:8px 10px;
+    border-radius: 25px;
 }
 
 /*#trade input[type=number]{
@@ -521,3 +539,57 @@
     background-color: #ca322d;
 }
 
+/* tile info CSS */
+.modal-popup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    opacity: 1;
+    z-index: 101;
+    visibility: hidden;
+}
+
+.modal-popup-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #51565C;
+    padding: 1rem 1.5rem;
+    width: 24rem;
+    border-radius: 0.5rem;
+    color: white
+}
+
+.place-image-wrapper{
+    width: 100%;
+    display: flex;
+
+}
+
+.place-image-wrapper img{
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    
+    
+}
+
+.close-button {
+    float: right;
+    width: 1.5rem;
+    line-height: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    background-color: lightgray;
+}
+
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+}

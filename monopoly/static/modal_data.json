@@ -1,0 +1,242 @@
+{
+    "0" : {
+        "name":"Rotunda",
+        "image":"/static/images/location-img/img0.jpg",
+        "desc":"The place to go to meet seniors in the first days on campus, the place for random Club Meets, the place for many Performances in Fests. Between the Clockower and NAB, this place is in a central location of the campus. Cycling in Rotunda might be one of the easiest ways to get a sem-back.",
+        "cost":"Start"
+    },
+    "1" : {
+        "name":"Economics & Finance and Management Departments",
+        "image":"/static/images/location-img/img1.png",
+        "desc":"You’ve taken PoE or PoM so you’ve done at least one course with at least one of these. Vital to the Economics and Finance Association, courses from this department are taken by Economics and Finance Minor students alike. Does the world run on I-O-U’s? The Department of Management, established in 1971 , is one of the oldest management departments among Indian universities. The events conducted in Interface, the pan India management fest organized by Department of Management are related to all major fields of management- Marketing, Finance, Operations and HR.",
+        "cost":"3500"
+    },
+    "2" : {
+        "name":"Saraswati Temple",
+        "image":"/static/images/location-img/img2.jpg",
+        "desc":"This is one of the most peaceful locations on campus made from beautiful marble, specially transported over 200 km from Makrana.",
+        "cost":"Chance"
+    },
+    "3" : {
+        "name":"CSIS Department",
+        "image":"/static/images/location-img/img3.png",
+        "desc":"The Department of Computer Science was established in the year 1971 and is one of the best Computer Science & Engineering departments in the country. No, buying this location won’t make you instantly rich",
+        "cost":"4000"
+    },
+    "4" : {
+        "name":"Mathematics Department",
+        "image":"/static/images/location-img/img4.png",
+        "desc":"The department was established in 1944 as a part of the Birla Science College (then existing), which was incorporated in the Institute in 1964. M2 was fun, right?",
+        "cost":"3250"
+    },
+    "5" : {
+        "name":"Vyas Bhawan",
+        "image":"/static/images/location-img/img5.png",
+        "desc":"Away from all academic buildings and close to C’Not, this is where all lite Bitsians prefer to stay. Currently under Renovations. And let’s not forget the Vyas Bridge.",
+        "cost":"2000"
+    },
+    "6" : {
+        "name":"Shankar Bhawan",
+        "image":"/static/images/location-img/img6.png",
+        "desc":"Away from all academic buildings and close to C’Not, this is where all lite Bitsians prefer to stay. Currently under Renovations. And let’s not forget the Vyas Bridge.",
+        "cost":"2250"
+    },
+    "7" : {
+        "name":"Student Activity Center",
+        "image":"/static/images/location-img/img7.jpg",
+        "desc":"The building with badminton courts, a squash court, a Table tennis room, a Health Club, an open-air amphitheater, etc is a perfect place for refreshing your mind and working with your clubs and departments for the fests.",
+        "cost":"Chance"
+    },
+    "8" : {
+        "name":"Gandhi Bhawan",
+        "image":"/static/images/location-img/img8.png",
+        "desc":"Gandhi 137 and Extra masala maggi at the Redi are to die for, don’t  you agree?",
+        "cost":"3500"
+    },
+    "9" : {
+        "name": "Krishna Bhawan",
+        "image":"/static/images/location-img/img9.png",
+        "desc":"Recently Renovated and at the prime location on campus, This hostel has it all.( Who needs females , anyway)",
+        "cost":"3750"
+    },
+    "10" : {
+        "name":"Department of Electrical and Electronics Engineering",
+        "image":"/static/images/location-img/img10.jpg",
+        "desc":"If you like shocks and jolts in your life you will thrive under the Department of Electrical and Electronics Engineering, established by merger of Electrical Engineering and Electronics Engineering in 1969-70.",
+        "cost":"2000"
+    },
+    "11" : {
+        "name":"Department of Mechanical Engineering",
+        "image":"/static/images/location-img/img11.png",
+        "desc":"The place to go to meet seniors in the first days on campus, the place for random Club Meets, the place for many Performances in Fests. Between the Clockower and NAB, this place is in a central location of the campus. Cycling in Rotunda might be one of the easiest ways to get a sem-back.",
+        "cost":"1750"
+    },
+    "12" : {
+        "name":"Vishwakarma Bhavan",
+        "image":"/static/images/location-img/img12.png",
+        "desc":"Stop here for the ultimate Sam chaat and one of the central hubs for gapp shup and fun.",
+        "cost":"2500"
+    },
+    "13" : {
+        "name":"Bhagirath Bhavan",
+        "image":"/static/images/location-img/img13.png",
+        "desc":"Shrouded in a ghostly blue glow at night, this Bhawan is only for 4th years. Enter this bhavan if you dare, who knows, maybe this abandoned-looking ancient bhavan may turn out to be lucky for you.",
+        "cost":"1500"
+    },
+    "14" : {
+        "name": "ANC",
+        "image":"/static/images/location-img/img14.png",
+        "desc":"Need a place for post midnight shenanigans? Come over, eat chill and bond over fun tales and yummy food. Late night cravings are best met here.",
+        "cost":"3250"
+    },
+    "15" : {
+        "name":"GymG (& Amul)",
+        "image":"/static/images/location-img/img15.png",
+        "desc":"Gym Grounds, a place meant for all your sports needs. Grab your shoes and a ball, sweat out your frustrations and get that blood pumping. Too many calories lost? Treat yourself to some Ice Cream at Amul! Wait, where did my gains go?",
+        "cost":"3500"
+    },
+    "16" : {
+        "name":"C'Not",
+        "image":"/static/images/location-img/img16.png",
+        "desc":"Pilani’s own Fake CP. Most of your cravings and stationary needs are met here.",
+        "cost":"4000"
+    },
+    "17" : {
+        "name":"MedC",
+        "image":"/static/images/location-img/img17.jpg",
+        "desc":"The Medical Center, if you sleep off a test, this is probably here you get your “Get Out of Jail Free” card.",
+        "cost":"Chance"
+    },
+    "18" : {
+        "name":"Ashok Bhawan",
+        "image":"/static/images/location-img/img18.png",
+        "desc":"Another Old Hostel reserved for 4th yearites, poor lighting, old walls, and dogs roaming the ghostly halls. Deja Vu?",
+        "cost":"1250"
+    },
+    "19" : {
+        "name":"Rana Pratap Bhawan",
+        "image":"/static/images/location-img/img19.png",
+        "desc":"Another Old Hostel reserved for 4th yearites, poor lighting, old walls, and dogs roaming the ghostly halls. Deja Vu?",
+        "cost":"1000"
+    },
+    "20" : {
+        "name":"Shiv Ganga",
+        "image":"/static/images/location-img/img20.jpg",
+        "desc":"Have you ever crashed a wedding in Pilani? Now a part of campus bucket-lists, it wasn't always off limits",
+        "cost":"Chance"
+    },
+    "21" : {
+        "name":"Department of Civil Engineering",
+        "image":"/static/images/location-img/img21.png",
+        "desc":"It was established in 1959 and is one of the oldest departments in the country. Over the years the department has nurtured young minds to produce bright able civil engineers.( Not all of us are Bob The Builders.)",
+        "cost":"2750"
+    },
+    "22" : {
+        "name":"Placement Unit",
+        "image":"/static/images/location-img/img22.png",
+        "desc":"It could make or break your career. The last major stop before leaving college.",
+        "cost":"Chance"
+    },
+    "23" : {
+        "name":"LTC",
+        "image":"/static/images/location-img/img23.png",
+        "desc":"It’s huge lecture rooms meant for Janta courses, are blessed by ACs, and might be why there is a surge of attendance in the summer months. Most of the workshops and talks conducted happen here. The distant learning courses are conducted in LTC.",
+        "cost":"3000"
+    },
+    "24" : {
+        "name":"SR Bhawan",
+        "image":"/static/images/location-img/img24.png",
+        "desc":"Sometimes described as the hostel that feels most like a hostel, SR is off in its own little corner of the campus. SR is home to some cheeky doggos and  plywood walls that are only loved after leaving.",
+        "cost":"2000"
+    },
+    "25" : {
+        "name":"Audi(& IC)",
+        "image":"/static/images/location-img/img25.jpg",
+        "desc":"Some say it’s as old as time itself, Can’t even have an AC installed due to “Constraints”. Yet a place where we have a lot of fun with professional and student events and performances. No Fest starts right without the Audi. At the Institute Canteen, Get some classic dishes when the Mess food sucks, but they only take cash for payment",
+        "cost":"2500"
+    },
+    "26" : {
+        "name":"Sky Labs(& the museum)",
+        "image":"/static/images/location-img/img26.png",
+        "desc":"Sky is a place of memories. From snacking to snaps, Sky Labs is simply unique. No one knows what the museum's like on the inside, No one who wants to be placed at least",
+        "cost":"4000"
+    },
+    "27" : {
+        "name":"Malviya (& MSA)",
+        "image":"/static/images/location-img/img27.png",
+        "desc":"The recently renovated hostel Mal A with single spacious rooms, well-maintained badminton courts, and access to the Terrace! is described as “Simple the Best” by those who live there.",
+        "cost":"2250"
+    },
+    "28" : {
+        "name":"Looters",
+        "image":"/static/images/location-img/img28.jpg",
+        "desc":"The go-to place for all the fast-food lovers; offers a wide variety of food such as burgers, pizzas, and momos. It is the Junk Food Paradise of BPPC.",
+        "cost":"3500"
+    },
+    "29" : {
+        "name":"ToTT (& -301F)",
+        "image":"/static/images/location-img/img29.png",
+        "desc":"The warm lighting, and the billboard hits playing in the background, lend a warm and cozy ambiance to this newly opened restaurant. Although Food King is missed, ToTT makes the South Indians on campus happy.( Let’s not have a FK vs ToTT argument, FK wins hands-down). Birthday celebrations never start before your faces are smashed into cakes from -301. The top pick of dessert lovers on the campus offers a wide range of ice-creams, sundaes, and pastries.",
+        "cost":"3750"
+    },
+    "30" : {
+        "name":"Department of Chemical Engineering",
+        "image":"/static/images/location-img/img30.png",
+        "desc":"The Department of Chemical Engineering at BITS-Pilani, Pilani Campus is one of the premier departments in the country that provides a unique educational and research environment.",
+        "cost":"3000"
+    },
+    "31" : {
+        "name":"Meera Bhawan",
+        "image":"/static/images/location-img/img31.jpg",
+        "desc":"The formidable girls’ hostel, Meera Bhawan stands in a cozy nook deep within the campus, surrounded by seemingly impenetrable walls. As the only hostel complex for girls, Meera is located far away from the academic buildings, so a cycle is a must to attend 8 am tuts in time.",
+        "cost":"3000"
+    },
+    "32" : {
+        "name":"Budh Bhawan",
+        "image":"/static/images/location-img/img32.png",
+        "desc":"Housing a combination of second and third year guys, late night gaming sessions with the wing are a common view if you pass through the corridors of this bhawan.",
+        "cost":"2500"
+    },
+    "33" : {
+        "name":"Library",
+        "image":"/static/images/location-img/img33.jpg",
+        "desc":"The BITS Pilani Library has seen knowledge and chemistry like no other. The late night sessions before exams, the coffee breaks, the constant searching plug points become some of the only memories you have of the mid-sem/ compre seasons..",
+        "cost":"Chance"
+    },
+    "34" : {
+        "name":"Ram Bhawan",
+        "image":"/static/images/location-img/img34.png",
+        "desc":"One of the first Renovated hostels. It has a good Location, but it’s a bit older than the other renovated ones. Balanced, as all things should be.",
+        "cost":"2500"
+    },
+    "35" : {
+        "name":"Department of Biology + Department of Pharmacy",
+        "image":"/static/images/location-img/img35.png",
+        "desc":"Known for their excellence and passion, the professors make these departments shine.",
+        "cost":"2000"
+    },
+    "36" : {
+        "name":"S9",
+        "image":"/static/images/location-img/img36.png",
+        "desc":"Where we go when we need stationary, or need to print those slides. This is the go to for manuals and printouts.",
+        "cost":"Chance"
+    },
+    "37" : {
+        "name":"Department of Chemistry",
+        "image":"/static/images/location-img/img37.png",
+        "desc":"Chemistry might be boring, but the Department is still one of the best in the nation.",
+        "cost":"1500"
+    },
+    "38" : {
+        "name":"Department of Physics",
+        "image":"/static/images/location-img/img38.png",
+        "desc":"The knowledgeable professors, through their work and approachability, makes the department one of the best departments of BITS Pilani.",
+        "cost":"1250"
+    },
+    "39" : {
+        "name":"Clock Tower",
+        "image":"/static/images/location-img/img39.png",
+        "desc":"This iconic landmark of BITS Pilani has been here from the very start. BITS Pilani without the Clocktower is like Steve Jobs without Apple, Romeo without Juliet, Ramen without noodles.",
+        "cost":"4500"
+    }
+}

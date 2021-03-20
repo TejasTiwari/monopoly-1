@@ -116,6 +116,7 @@ class BoardController {
                 total: 2
             }), tileId);
         }
+        
     }
 
     addLandMark(playerIndex, tileId) {
@@ -265,12 +266,19 @@ class BoardController {
 
             checkLoading();
         });
-
+        
+        console.log(document.querySelector('.close-button'))
+        document.querySelector(".close-button").onclick = (event) => {
+            console.log('clicked', event, document.getElementById("modal-popupbox-id").style.visibility)
+            document.getElementById("modal-popupbox-id").style.visibility = "hidden";
+            console.log(document.getElementById("modal-popupbox-id").style.visibility)
+        };
         // add ground
         this.groundModel = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 1, 1), this.materials.groundMaterial);
         this.groundModel.position.set(BoardController.SQUARE_SIZE * Board.SIZE / 2, -1.52, BoardController.SQUARE_SIZE * Board.SIZE / 2);
         this.groundModel.rotation.x = -90 * Math.PI / 180;
         this.scene.add(this.groundModel);
+
 
         for (let row = 0; row < Board.SIZE; row++) {
             for (let col = 0; col < Board.SIZE; col++) {
@@ -282,27 +290,70 @@ class BoardController {
 
                 square.rotation.x = -90 * Math.PI / 180;
                 if (row === 0 || row === 10 || col === 0 || col === 10) {
+                    // console.log(this.currentTile)
                     this.squareTiles.push(square);
-                    window.addEventListener(
-                              "click",
-                              (event) => {
-                                this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                                this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                    window.addEventListener('click', (event) => {
+                        // console.log(this.currentTile, this.currentTile['object'], square.uuid)
+                        if (
+                            square.uuid === this.currentTile?.object.uuid
+                            && event.target !== document.querySelector('.close-button')
+                            && event.target !== document.querySelector('#modal-button-0')
+                            && event.target !== document.querySelector('#modal-button-1')
+                            && event.target.tagName !== 'BUTTON'
+                            && event.target.tagName !== 'INPUT'
+                            && event.target.tagName !== 'SELECT'
+                            && event.target.tagName !== 'LABEL'
+                        ) {
+                            document.getElementById("modal-popupbox-id").style.visibility = "unset";
+                            fetch('/static/modal_data.json').then(response => response)
+                                .then(data => data.json())
+                                .then(modalDataJSON => {
+                                    const modalData = modalDataJSON[square.id]
+                                    const modalElem = document.querySelector('.place-data')
+                                    modalElem.innerHTML = '';
+                                    modalElem.innerHTML += `<h1>${modalData.name}</h1>`
+                                    modalElem.innerHTML += `<h3>${modalData.desc}</h3>`
+                                    !(modalData.cost === 'Chance') && (modalElem.innerHTML += `<h4>&#8377; ${modalData.cost}</h4>`);
+
+                                    const imageWrapper = document.createElement('div');
+                                    imageWrapper.classList.add('place-image-wrapper');
+                                    imageWrapper.innerHTML = `<img src='${modalData.image}'>`;
+                                    modalElem.appendChild(imageWrapper);
+                                })
+                        }
+                    })
+                    
+                    // window.addEventListener(
+                    //           "click",
+                    //           (event) => {
+                    //             this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    //             this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
                         
-                                this.raycaster.setFromCamera(this.mouse, this.camera);
+                    //             this.raycaster.setFromCamera(this.mouse, this.camera);
                         
-                                const intersects = this.raycaster.intersectObjects(this.scene.children);
-                                // console.log('sq', square)
-                                const isIntersected = intersects.find(
-                                  (intersectedEl) => intersectedEl.object.uuid === square.uuid
-                                );
+                    //             const intersects = this.raycaster.intersectObjects(this.scene.children);
+                    //             // console.log('sq', square)
+                    //             const isIntersected = intersects.find(
+                    //               (intersectedEl) => intersectedEl.object.uuid === square.uuid
+                    //             );
                         
-                                if (isIntersected) {
-                                  console.log('yay', square)
-                                }
-                              },
-                              false
-                            );
+                    //             if (isIntersected) {
+                    //                 document.getElementById("modal-popupbox-id").style.visibility = "unset";
+                    //                 console.log(square.id)
+                    //                 fetch('/static/modal_data.json').then(response => response)
+                    //                 .then(data => data.json())
+                    //                 .then(modalDataJSON => {
+                    //                     const modalData = modalDataJSON[square.id]
+                    //                     const modalElem = document.getElementById('modal-popup-box')
+                    //                     modalElem.innerHTML += `<h1>${modalData.name}</h1>`
+                    //                     modalElem.innerHTML += `<h3>${modalData.desc}</h3>`
+                    //                     modalElem.innerHTML += `<h4>${modalData.cost}</h4>`
+                    //                     modalElem.innerHTML += `<img src='${modalData.image}'>`
+                    //                 })
+                    //             }
+                    //           },
+                    //           false
+                    //         );
                 }
 
                 this.scene.add(square);
@@ -326,12 +377,13 @@ class BoardController {
     onAnimationFrame() {
         requestAnimationFrame(() => this.onAnimationFrame());
            // update the picking ray with the camera and mouse position
-           this.raycaster.setFromCamera(this.mouse, this.camera);
+        this.raycaster.setFromCamera(this.mouse, this.camera);
 
-           // calculate objects intersecting the picking ray
-           const intersects = this.raycaster.intersectObjects(this.squareTiles);
-           this.currentTile = intersects[0] ?? null;
-        // console.log(this.currentTile,)
+        // calculate objects intersecting the picking ray
+        const intersects = this.raycaster.intersectObjects(this.squareTiles);
+        
+        this.currentTile = intersects[0] ?? null;
+        
         this.cameraController.update();
 
         // update moving light position

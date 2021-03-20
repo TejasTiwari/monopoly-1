@@ -15,13 +15,11 @@ class GameController {
         });
 
         this.boardController.drawBoard(onBoardPainted);
-        // const onMouseMove = event => {
-        //     console.log('object')
-        //     this.boardController.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        //     this.boardController.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        // }
-
-        // window.addEventListener('mousemove', onMouseMove, false);
+        const onMouseMove = event => {
+            this.boardController.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            this.boardController.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        }
+        window.addEventListener("click", onMouseMove, false)
     }
 
     addPlayer(count, initPos) {
