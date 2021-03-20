@@ -30,6 +30,7 @@ def ws_add(message):
     print('ws_add invoked')
     message.reply_channel.send({"accept": True})
     mypath = message.content['path']
+    print(mypath)
     print('path is', mypath)
     if 'join' in mypath:
         ws_connect_for_join(message)
