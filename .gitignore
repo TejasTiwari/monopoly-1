@@ -174,3 +174,4 @@ monopoly/*.py.bak
 webapps/*.bak
 monopoly/ws_handlers/game_handler.py.bak
 *.pkl
+staticfiles

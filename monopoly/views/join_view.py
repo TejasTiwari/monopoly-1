@@ -11,16 +11,21 @@ class JoinView(View):
         print((request.path))
         user = request.user
         host_name = kwargs.get('host_name', user.username)
-
         try:
             profile = Profile.objects.get(user=user)
+            # Check if user was connected to a game which he didn't quit
+            if profile.hostname:
+                return render(request, 'game_view.html', {
+                    "username": user.username,
+                    "hostname": profile.hostname
+                })
         except Exception:
             profile = None
 
         return render(request, self.template_name, {
             "user": {
                 "name": user.username,
-                "avatar": profile.avatar.url if profile else ""
+                "avatar": ""
             },
             "host_name": host_name if len(host_name) else user.username
         })

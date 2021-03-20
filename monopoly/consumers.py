@@ -167,8 +167,7 @@ def build_join_reply_msg(room_name):
             profile = Profile.objects.get(user=profile_user)
         except Exception:
             profile = None
-        avatar = profile.avatar.url if profile else ""
-        data.append({"id": profile_user.id, "name": player, "avatar": avatar})
+        data.append({"id": profile_user.id, "name": player, "avatar": ""})
 
     ret = {"action": "join",
            "data": data
@@ -178,6 +177,8 @@ def build_join_reply_msg(room_name):
 
 
 def add_player(room_name, player_name):
+    if room_name == 'logout':
+        return
     if room_name not in rooms:
         rooms[room_name] = set()
         rooms[room_name].add(room_name)

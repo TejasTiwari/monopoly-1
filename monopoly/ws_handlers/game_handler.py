@@ -44,6 +44,7 @@ def ws_connect_for_game(message, rooms, games):
         decision = decisions[hostname].beautify()
         landname = decisions[hostname].get_land().get_description()
         next_player = game.get_current_player().get_index()
+        print(next_player)
 
         title_type = ModalTitleType()
         decision_type = decisions[hostname].move_result_type
@@ -267,7 +268,7 @@ def handle_end_game(hostname, games):
     for player in players:
         asset_dicts.append((player, player.get_asset()))
         all_asset.append(player.get_asset())
-        
+
     asset_dicts.sort(key = lambda x: x[1])
     winning_asset = asset_dicts[0][1]
     for info in asset_dicts:
@@ -278,10 +279,10 @@ def handle_end_game(hostname, games):
                 profile.wins += 1
                 profile.save()
             except Exception:
-                profile = None                
+                profile = None
         else:
             break
-            
+
     Group(hostname).send({
         "text": build_game_end_msg(curr_player, all_asset)
     })
@@ -369,13 +370,8 @@ def build_init_msg(players, cash_change, pos_change, wait_decision, decision, ne
     players_list = []
     for player in players:
         profile_user = User.objects.get(username=player)
-        try:
-            profile = Profile.objects.get(user=profile_user)
-        except Exception:
-            profile = None
-        avatar = profile.avatar.url if profile else ""
         players_list.append({"fullName": profile_user.first_name,
-                     "userName": profile_user.username, "avatar": avatar})
+                     "userName": profile_user.username, "avatar": ""})
 
     ret = {"action": "init",
            "players": players_list,

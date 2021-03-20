@@ -9,8 +9,9 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User)
     bio = models.CharField(max_length=140, blank=True)
-    avatar = models.FileField(blank=False)
+    # avatar = models.FileField(blank=False)
     wins = models.IntegerField(default = 0)
+    hostname = models.CharField(max_length=100, blank=True, null=True, default=None)
 
     def __str__(self):
-        return str(self.user) + str(self.bio) + str(self.avatar)
+        return str(self.user) + str(self.bio) #+ str(self.avatar)
