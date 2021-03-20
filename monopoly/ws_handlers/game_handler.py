@@ -134,7 +134,8 @@ def handle_roll(hostname, games, changehandlers):
         curr_cash = []
         for player in players:
             curr_cash.append(player.get_money())
-
+    # print(curr_player)
+    print(next_player)
     Group(hostname).send({
         "text": build_roll_res_msg(curr_player, steps, move_result.beautify(), is_option, is_cash_change,
                                    new_event, new_pos, curr_cash, next_player, title, landname, bypass_start)
@@ -193,54 +194,62 @@ def handle_accept(hostname, msg, games):
     game = games[hostname]
     players = game.get_players()
     
-    initiator_index = int(msg["currentPlayer"])
-    acceptor_index = int(msg["playerSelected"])
+    initiator_index = int(msg["initiator"])
+    acceptor_index = int(msg["acceptor"])
     
-    propertyGiven_index = int(msg["propertyGiven"])
-    propertyTaken_index = int(msg["propertyTaken"])
+    propertyGiven_index = (msg["propertyGiven"])
+    propertyTaken_index = (msg["propertyTaken"])
     
     moneyGiven = int(msg["moneyGiven"])
     moneyTaken = int(msg["moneyTaken"])
     
     for player in players:
         if player.get_index() == initiator_index:
-            player.add_money(moneyTaken)
-            player.deduct_money(moneyGiven)
-        
-        if player.get_index() == acceptor_index:
             player.add_money(moneyGiven)
             player.deduct_money(moneyTaken)
+        
+        if player.get_index() == acceptor_index:
+            player.add_money(moneyTaken)
+            player.deduct_money(moneyGiven)
             
-    for i in range(self._board.get_grid_num()):
-        land = self._board.get_land(i)
-        if land == propertyGiven_index:
-            land.get_content().set_owner(acceptor_index)
-            
-        if land == propertyTaken_index:
-            land.get_content().set_owner(initiator_index)
-            
+    for i in range(game._board.get_grid_num()):
+        land = game._board.get_land(i)
+        for j in range(len(propertyGiven_index)):   
+            if land == propertyGiven_index[j]:
+                land.get_content().set_owner(acceptor_index)
+        for j in range(len(propertyTaken_index)):
+            if land == propertyTaken_index[j]:
+                land.get_content().set_owner(initiator_index)
+    curr_cash = []
+    for player in players:
+         curr_cash.append(player.get_money())
     Group(hostname).send({
         "text" : json.dumps({
-            "action" : "propose",
-            "msg" : "Trade successful!"
+            "action" : "accept",
+            "msg" : "Trade successful!",
+            "initiator": initiator_index,
+            "updatedPlayersCash":curr_cash
         })
     })
     
     print({
         "text" : json.dumps({
-            "action" : "propose",
+            "action" : "accept",
             "msg" : "Trade successful!"
         })
     })
 
 def handle_reject(hostname, msg, games):
     game = games[hostname]
-    # next_player = game.get_current_player().get_index()
+    next_player = game.get_current_player().get_index()
     
     Group(hostname).send({
         "text" : json.dumps({
             "action" : "reject",
-            "nextPlayer" : next_player
+            "nextPlayer" : next_player,
+            "initiator": msg["initiator"],
+            "acceptor": msg["acceptor"],
+
         })
     })
 
@@ -306,6 +315,7 @@ def handle_confirm_decision(hostname, games):
             build_type = "house"
         else:
             build_type = "hotel"
+        print(next_player,curr_player)
         Group(hostname).send({
             "text": build_construct_msg(curr_cash, tile_id, build_type, next_player)
         })
@@ -322,6 +332,18 @@ def handle_cancel_decision(hostname, games):
     next_player = game.get_current_player().get_index()
     Group(hostname).send({
         "text": build_cancel_decision_msg(next_player)
+    })
+def handle_cancel_decision1(hostname, games):
+    game = games[hostname]
+    if hostname not in decisions:
+        return
+    decision = decisions[hostname]
+    del decisions[hostname]
+    decision.set_decision(False)
+    game.make_decision(decision)
+    next_player = game.get_current_player().get_index()
+    Group(hostname).send({
+        "text": build_cancel_decision1_msg(next_player)
     })
 
 
@@ -404,6 +426,7 @@ def build_roll_res_msg(curr_player, steps, result, is_option, is_cash_change, ne
            "landname": landname,
            "bypass_start": bypass_start,
             }
+    print(next_player)
     #print json.dumps(ret)
     return json.dumps(ret)
 
@@ -441,6 +464,12 @@ def build_construct_msg(curr_cash, tile_id, build_type, next_player):
 
 def build_cancel_decision_msg(next_player):
     ret = {"action": "cancel_decision",
+           "next_player": next_player,
+    }
+    #print json.dumps(ret)
+    return json.dumps(ret)
+def build_cancel_decision1_msg(next_player):
+    ret = {"action": "cancel_decision1",
            "next_player": next_player,
     }
     #print json.dumps(ret)

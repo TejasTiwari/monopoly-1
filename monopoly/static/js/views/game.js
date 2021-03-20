@@ -128,6 +128,8 @@ class GameView {
       'reject': this.rejectTradeHandler,
     };
 
+    console.log(message.action)
+
     if (!this.gameInProcess) return;
 
     messageHandlers[message.action].bind(this)(message);
@@ -233,7 +235,7 @@ class GameView {
    * */
   changePlayer(nextPlayer, onDiceRolled) {
     let tradeView;
-    console.log("change player");
+    console.log(this, nextPlayer);
     // update user indicator
     if (this.currentPlayer !== null) {
       let $currentUserGroup = document.getElementById(
@@ -315,14 +317,15 @@ class GameView {
    * }],
    * displayTime: int // seconds to display
    * */
-  async reject() {
+  async reject(initiator,acceptor) {
     this.socket.send(
       JSON.stringify({
         action: "reject",
+         initiator,
+        acceptor,
         hostname: this.hostName,
       })
     );
-    await this.hideModal(true);
   }
   handleReject(message) {
     let next_player = message.next_player;
@@ -521,7 +524,7 @@ class GameView {
         .setAttribute("value", moneyGiven);
       document.getElementById("trade-rightp-money").disabled = true;
       document
-        .getElementById("trade-leftp-money")
+        .getElementById("trade-rightp-money")
         .setAttribute("value", moneyTaken);
       document.getElementById("trade-leftp-property").innerHTML = propertyGiven;
       document.getElementById(
@@ -529,47 +532,27 @@ class GameView {
       ).innerHTML = propertyTaken;
       const acceptTrade = document.getElementById("accepttradebutton");
       acceptTrade.style.display = "";
-      acceptTrade.onclick = acceptTradeHandler.bind(this);
+      acceptTrade.onclick = () => {
+        if(acceptor===this.myPlayerIndex){
+          document.getElementsByClassName(
+              "card-content-container"
+            )[0].style.display = "";
+            document.getElementsByClassName(
+              "card-blur-container"
+            )[0].style.display = "";
+            document.getElementById("trade").style.display = "none";
+        }
 
-      async function acceptTradeHandler() {
         this.acceptTrade( initiator,
-            acceptor,
-            propertyGiven,
-            moneyGiven,
-            moneyTaken,
-            propertyTaken);
-            // table display none
-            // modal display ""
-            if(acceptor===this.myPlayerIndex){
-                
-                document.getElementsByClassName(
-                    "card-content-container"
-                  )[0].style.display = "";
-                  document.getElementsByClassName(
-                    "card-blue-container"
-                  )[0].style.display = "";
-                  document.getElementById("trade").style.display = "none";
-            }
-            if(initiator===this.myPlayerIndex){
-                document.getElementsByClassName(
-                    "card-content-container"
-                  )[0].style.display = "none";
-                document.getElementsByClassName(
-                    "card-blur-container"
-                  )[0].style.display = "none";
-             document.getElementById('waitTrade').innerHTML=`<h4>Trade Accepted</h4>`
-             setTimeout(()=>{
-                document.getElementById("waitTrade").remove();
-                document.getElementsByClassName(
-                    "card-content-container"
-                  )[0].style.display = "";
-                  document.getElementsByClassName(
-                    "card-blue-container"
-                  )[0].style.display = "";
-             },2000)
-            }
+          acceptor,
+          propertyGiven,
+          moneyGiven,
+          moneyTaken,
+          propertyTaken
+        );
+      } 
 
-      }
+
       const rejectTrade = document.getElementById("rejecttradebutton");
       rejectTrade.style.display = "";
       rejectTrade.onclick = reject_trade.bind(this);
@@ -579,23 +562,26 @@ class GameView {
           document.getElementsByClassName(
             "card-content-container"
           )[0].style.display = "";
-        } 
-         if (initiator === this.myPlayerIndex) {
-          console.log(initiator);
-          let div = document.getElementById("waitTrade");
-          div.remove();
-          document.getElementsByClassName("card-content-container")[0].style.display = "";
-          document.getElementsByClassName("card-blue-container")[0].style.display = "";
-        } 
-        if(initiator !== this.myPlayerIndex &&acceptor !== this.myPlayerIndex) {
-          this.showModal(
-            initiator,
-            "trade with" + this.players[acceptor].fullName + "was rejected",
-            "",
-            "",
-            []
-          );
+          console.log(this.reject)
+          this.reject(initiator, acceptor);
         }
+
+        //  if (initiator === this.myPlayerIndex) {
+        //   console.log(initiator);
+        //   let div = document.getElementById("waitTrade");
+        //   div.remove();
+        //   document.getElementsByClassName("card-content-container")[0].style.display = "";
+        //   document.getElementsByClassName("card-blue-container")[0].style.display = "";
+        // } 
+        // if(initiator !== this.myPlayerIndex &&acceptor !== this.myPlayerIndex) {
+        //   this.showModal(
+        //     initiator,
+        //     "trade with" + this.players[acceptor].fullName + "was rejected",
+        //     "",
+        //     "",
+        //     []
+        //   );
+        // }
       }
     }
     if (initiator === this.myPlayerIndex) {
@@ -622,16 +608,46 @@ class GameView {
         []
       );}
   }
+
+  acceptTradeHandler(message) {
+      console.log(message)
+    document.getElementById("trade").style.display = "none";
+        // table display none
+        // modal display ""
+        this.changeCashAmount(message.updatedPlayersCash)
+        
+        if(message.initiator===this.myPlayerIndex){
+            document.getElementsByClassName(
+                "card-content-container"
+              )[0].style.display = "none";
+            document.getElementsByClassName(
+                "card-blur-container"
+              )[0].style.display = "none";
+         document.getElementById('waitTrade').innerHTML=`<h4>Trade Accepted</h4>`
+         setTimeout(()=>{
+            document.getElementById("waitTrade").remove();
+            document.getElementsByClassName(
+                "card-content-container"
+              )[0].style.display = "";
+              document.getElementsByClassName(
+                "card-blur-container"
+              )[0].style.display = "";
+         },2000)
+        }
+
+  }
+  
   acceptTrade( initiator,
     acceptor,
     propertyGiven,
     moneyGiven,
     moneyTaken,
     propertyTaken,) {
+        console.log("sent");
     this.socket.send(
       JSON.stringify({
         action: "accept",
-        initiator,
+    initiator,
         acceptor,
         propertyGiven,
         moneyGiven,
@@ -640,6 +656,28 @@ class GameView {
         hostname: this.hostName,
       })
     );
+  }
+
+  rejectTradeHandler(message){
+    console.log(message);
+    if(this.myPlayerIndex===message.initiator){
+      let div = document.getElementById("waitTrade");
+      div.remove();
+      document.getElementsByClassName("card-content-container")[0].style.display = "";
+      document.getElementsByClassName("card-blur-container")[0].style.display = "";
+    }  
+    if(message.initiator !== this.myPlayerIndex && message.acceptor !== this.myPlayerIndex) {
+        // div vala logic, and disp modal
+    //   this.showModal(
+    //     message.initiator,
+    //     this.players[message.initiator].fullName +
+    //       "trading with " +
+    //       this.players[message.acceptor].fullName,
+    //     "Please wait",
+    //     "",
+    //     []
+    //   );
+    }  
   }
 
   handleTrade(message) {
@@ -811,6 +849,7 @@ class GameView {
   async handleRollRes(message) {
     let currPlayer = message.curr_player;
     let nextPlayer = message.next_player;
+    console.log(nextPlayer,currPlayer)
     let steps = message.steps;
     let newPos = message.new_pos;
     let eventMsg = message.result;

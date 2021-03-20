@@ -93,6 +93,8 @@ def ws_message(message):
         handle_confirm_decision(hostname, games)
     if action == "cancel_decision":
         handle_cancel_decision(hostname, games)
+    if action == "cancel_decision1":
+        handle_cancel_decision1(hostname, games)
     if action == "chat":
         handle_chat(hostname, msg)
     if action == "trade":
