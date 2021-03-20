@@ -2,7 +2,6 @@
 *.imi
 *.ini
 config.ini
-migrations
 db.sqlite3
 .idea/misc.xml
 userdata
