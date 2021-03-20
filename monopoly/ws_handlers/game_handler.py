@@ -242,7 +242,7 @@ def handle_accept(hostname, msg, games):
 def handle_reject(hostname, msg, games):
     game = games[hostname]
     next_player = game.get_current_player().get_index()
-    
+    print(str(next_player)+ 'reje')
     Group(hostname).send({
         "text" : json.dumps({
             "action" : "reject",
