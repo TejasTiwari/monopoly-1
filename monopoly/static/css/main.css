@@ -165,6 +165,9 @@ a {
     margin: 0;
     padding: 20px;
     background: #fff no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #trade{
     z-index: 150

@@ -103,6 +103,10 @@
     top: 30%;
     bottom: auto;
     overflow: initial;
+    padding: 25px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #modal-message-container {
@@ -362,6 +366,7 @@
     cursor: pointer;
 }
 
+
 #controls-container svg {
     border-radius: 29px;
     background: #eeeeee;
@@ -507,6 +512,15 @@
     cursor: pointer;
     height: 2em;
     text-align: center;
+    
+}
+#trade-rightp-money{
+    padding:8px 10px;
+    border-radius: 25px;
+}
+#trade-leftp-money{
+    padding:8px 10px;
+    border-radius: 25px;
 }
 
 /*#trade input[type=number]{

@@ -99,6 +99,7 @@ def handle_roll(hostname, games, changehandlers):
     if move_result.move_result_type == MoveResultType.CONSTRUCTION_OPTION \
             or move_result.move_result_type == MoveResultType.BUY_LAND_OPTION:
         decisions[hostname] = move_result
+        next_player = game.get_current_player().get_index()
         is_option = "true"
     elif move_result.move_result_type == MoveResultType.PAYMENT \
             or move_result.move_result_type == MoveResultType.REWARD:
@@ -134,7 +135,7 @@ def handle_roll(hostname, games, changehandlers):
         curr_cash = []
         for player in players:
             curr_cash.append(player.get_money())
-
+    print(next_player)
     Group(hostname).send({
         "text": build_roll_res_msg(curr_player, steps, move_result.beautify(), is_option, is_cash_change,
                                    new_event, new_pos, curr_cash, next_player, title, landname, bypass_start)
@@ -220,18 +221,20 @@ def handle_accept(hostname, msg, games):
             player.add_money(moneyGiven)
             player.deduct_money(moneyTaken)
             
-    for i in range(self._board.get_grid_num()):
-        land = self._board.get_land(i)
+    for i in range(game_board.get_grid_num()):
+        land = game._board.get_land(i)
         if land == propertyGiven_index:
             land.get_content().set_owner(acceptor_index)
             
         if land == propertyTaken_index:
             land.get_content().set_owner(initiator_index)
-            
+    
     Group(hostname).send({
         "text" : json.dumps({
             "action" : "propose",
-            "msg" : "Trade successful!"
+            "msg" : "Trade successful!",
+            "acceptor":acceptor_index,
+        
         })
     })
     
@@ -244,8 +247,8 @@ def handle_accept(hostname, msg, games):
 
 def handle_reject(hostname, msg, games):
     game = games[hostname]
-    # next_player = game.get_current_player().get_index()
-    
+    next_player = game.get_current_player().get_index()
+    print(str(next_player) + 'reject')
     Group(hostname).send({
         "text" : json.dumps({
             "action" : "reject",
