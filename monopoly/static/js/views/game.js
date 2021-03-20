@@ -607,7 +607,7 @@ class GameView {
           )[0].style.display = "none";
       let div = document.createElement("div");
       div.setAttribute("id", "waitTrade");
-      div.innerHTML = `<h3>Awaiting players</h4>`;
+      div.innerHTML = `<h3>Awaiting Trade</h4>`;
       let trade = document.getElementById("trade");
       trade.before(div);
 
