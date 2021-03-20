@@ -43,7 +43,7 @@ class Board(object):
         self._lands.append(Land(26, "Sky Lawns and Museum", ConstructionLand(4000)))
         self._lands.append(Land(27, "Malviya and MSA", ConstructionLand(2250)))
         self._lands.append(Land(28, "Looters", Infra(3500)))
-        self._lands.append(Land(29, "TOTT and -301F", ConstructionLand(3750)))
+        self._lands.append(Land(29, "ToTT and -301F", ConstructionLand(3750)))
         self._lands.append(Land(30, "Department of Chemical Engineering", Infra(3000)))
         self._lands.append(Land(31, "Meera Bhavan", ConstructionLand(3000)))
         self._lands.append(Land(32, "Budh Bhavan", ConstructionLand(2500)))
