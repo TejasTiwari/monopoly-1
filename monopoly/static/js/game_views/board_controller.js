@@ -60,9 +60,7 @@ class BoardController {
 
     movePlayer(index, newTileId) {
         let currTileId = this.players[index].getTileId();
-        console.log("index and new tile id is: " + currTileId.toString() + " " + newTileId.toString());
-
-        // Remove previous player position
+          // Remove previous player position
         this.board.updateTileInfo(currTileId, {
             type: BoardController.MODEL_PLAYER,
             action: "remove",
@@ -267,11 +265,11 @@ class BoardController {
             checkLoading();
         });
         
-        console.log(document.querySelector('.close-button'))
+       
         document.querySelector(".close-button").onclick = (event) => {
-            console.log('clicked', event, document.getElementById("modal-popupbox-id").style.visibility)
+           
             document.getElementById("modal-popupbox-id").style.visibility = "hidden";
-            console.log(document.getElementById("modal-popupbox-id").style.visibility)
+           
         };
         // add ground
         this.groundModel = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 1, 1), this.materials.groundMaterial);

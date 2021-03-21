@@ -229,7 +229,9 @@ def handle_accept(hostname, msg, games):
             "action" : "accept",
             "msg" : "Trade successful!",
             "initiator": initiator_index,
-            "updatedPlayersCash":curr_cash
+            "updatedPlayersCash":curr_cash,
+            "propertyGivenIndex":propertyGiven_index,
+            "propertyTakenIndex":propertyTaken_index
         })
     })
     

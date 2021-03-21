@@ -487,9 +487,10 @@ class GameView {
     propertyGivenIndex,
     propertyTakenIndex,
     moneyGiven,
-    moneyTaken
+    moneyTaken,
+   
   ) {
-    console.log("prop trade working");
+   
     this.socket.send(
       JSON.stringify({
         action: "propose",
@@ -500,11 +501,12 @@ class GameView {
         propertyTakenIndex,
         moneyGiven,
         moneyTaken,
+       
       })
     );
   }
   proposeTradeHandler(message) {
-    console.log(message);
+   
     let {
       initiator,
       acceptor,
@@ -514,7 +516,7 @@ class GameView {
       propertyTaken,
     } = message;
     if (acceptor === this.myPlayerIndex) {
-      document.getElementById("trade").style.display = "inherit";
+      document.getElementById("trade").style.display = "unset";
       document.getElementsByClassName(
         "card-content-container"
       )[0].style.display = "none";
@@ -569,7 +571,7 @@ class GameView {
           document.getElementsByClassName(
             "card-content-container"
           )[0].style.display = "";
-          console.log(this.reject)
+         
           this.reject(initiator, acceptor);
         }
 
@@ -617,12 +619,29 @@ class GameView {
   }
 
   acceptTradeHandler(message) {
-      console.log(message)
+     
     document.getElementById("trade").style.display = "none";
         // table display none
         // modal display ""
         this.changeCashAmount(message.updatedPlayersCash)
-        
+       
+      //  for(let i = 0 ; i<message.propertyGivenIndex.length;i++){
+         
+      //    this.gameController.addProperty(
+      //      PropertyManager.PROPERTY_OWNER_MARK,
+      //      message.propertyGivenIndex[i],
+      //      message.acceptor
+      //    );
+      //   }
+      //  for(let i = 0 ; i<message.propertyTakenIndex.length;i++){
+
+      //   this.gameController.removeProperty(
+      //    PropertyManager.PROPERTY_OWNER_MARK,
+      //    message.propertyTakenIndex[i],
+         
+      //    message.initiator
+      //  );
+      // }
         if(message.initiator===this.myPlayerIndex){
             document.getElementsByClassName(
                 "card-content-container"
@@ -650,7 +669,7 @@ class GameView {
     moneyGiven,
     moneyTaken,
     propertyTaken,) {
-        console.log("sent");
+       
     this.socket.send(
       JSON.stringify({
         action: "accept",
@@ -666,7 +685,7 @@ class GameView {
   }
 
   rejectTradeHandler(message){
-    console.log(message);
+   
     if(this.myPlayerIndex===message.initiator){
       let div = document.getElementById("waitTrade");
       div.remove();
@@ -689,15 +708,19 @@ class GameView {
 
   handleTrade(message) {
 
-    console.log(message, this);
+   
     if (this.myPlayerIndex === this.currentPlayer) {
-      document.getElementById("trade").style.display = "inherit";
+      document.getElementById("trade").style.display = "unset";
       document.getElementsByClassName(
         "card-content-container"
       )[0].style.display = "none";
       document.getElementById("accepttradebutton").style.display = "none";
       document.getElementById("rejecttradebutton").style.display = "none";
+
+      document.getElementById('close-trade').onclick=stopTrade.bind(this);
     }
+
+    
     let proposeTrade = document.getElementById("proposetradebutton");
     let cancelTrade = document.getElementById("canceltradebutton");
     document.getElementById("trade-leftp-name").innerText = this.players[
@@ -733,14 +756,7 @@ class GameView {
           propertyTakenIndex.push(propertyTakeableIndex[i].value);
         }
       }
-      console.log(
-        currentPlayer,
-        playerSelected,
-        propertyGivenIndex,
-        propertyTakenIndex,
-        moneyGiven,
-        moneyTaken
-      );
+      
       document.getElementsByClassName(
         "card-content-container"
       )[0].style.display = "";
@@ -798,7 +814,7 @@ class GameView {
         return true;
       }
     })[0];
-    console.log(playerSelected, playerSelectedIndex);
+    
 
     let propertyCurrPlayer = [];
     let propertyRequestedPlayer = [];
@@ -812,7 +828,7 @@ class GameView {
         propertyRequestedPlayer.push(i);
     }
     // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
-    console.log(propertyCurrPlayer, propertyRequestedPlayer);
+    
 
     let table1 = document.createElement("table");
     let table2 = document.createElement("table");
@@ -873,7 +889,7 @@ class GameView {
   async handleRollRes(message) {
     let currPlayer = message.curr_player;
     let nextPlayer = message.next_player;
-    console.log(nextPlayer,currPlayer)
+   
     let steps = message.steps;
     let newPos = message.new_pos;
     let eventMsg = message.result;
@@ -973,6 +989,7 @@ class GameView {
 
   handleBuyLand(message) {
     const { curr_player, curr_cash, tile_id } = message;
+    
     this.changeCashAmount(curr_cash);
     this.gameController.addProperty(
       PropertyManager.PROPERTY_OWNER_MARK,
@@ -983,7 +1000,9 @@ class GameView {
     let next_player = message.next_player;
     this.changePlayer(next_player, this.onDiceRolled.bind(this));
   }
-  handleExchangeLand(data) {}
+  handleExchangeLand(message) {
+    
+  }
 
   handleConstruct(message) {
     let curr_cash = message.curr_cash;

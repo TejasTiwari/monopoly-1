@@ -502,6 +502,9 @@
 #trade-leftp-name, #trade-rightp-name, .tradecell{
     text-align: center;
 }
+#trade{
+    display: none;
+}
 
 #trade input[type=button]{
     border: none;
