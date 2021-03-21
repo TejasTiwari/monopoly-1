@@ -15,7 +15,7 @@ def ws_connect_for_game(message, rooms, games):
     hostname = fields[-1]
     Group(hostname).add(message.reply_channel)
 
-        print(hostname in games , hostname in rooms , username in rooms[hostname] )
+    # print(hostname in games , hostname in rooms , username in rooms[hostname] )
     if hostname not in games:
         message.reply_channel.send({
             "text": build_add_err_msg()

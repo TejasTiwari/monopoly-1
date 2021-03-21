@@ -172,7 +172,7 @@ def add_player(room_name, player_name):
     if player_name in rooms[room_name]:
         return True
 
-    if len(rooms[room_name]) >= 2:
+    if len(rooms[room_name]) >= 4:
         return False
 
     rooms[room_name].add(player_name)

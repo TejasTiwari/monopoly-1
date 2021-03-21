@@ -305,7 +305,7 @@ class BoardController {
                             && event.target.tagName !== 'LABEL'
                         ) {
                             document.getElementById("modal-popupbox-id").style.visibility = "unset";
-                            fetch('/static/modal_data.json').then(response => response)
+                            fetch('/static/modal_data1.json').then(response => response)
                                 .then(data => data.json())
                                 .then(modalDataJSON => {
                                     const modalData = modalDataJSON[square.id]

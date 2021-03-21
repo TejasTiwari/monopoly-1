@@ -8,7 +8,7 @@ class GameView {
 
     this.gameInProcess = true;
     this.message = null;
-    this.afk = false;
+    // this.afk = false;
 
     // const trade = require('../game_views/')
   }
@@ -142,37 +142,37 @@ class GameView {
     messageHandlers[message.action].bind(this)(message);
     // console.log(this)
   }
-  afkState() {
-    this.afk = !this.afk;
+//   afkState() {
+//     this.afk = !this.afk;
 
-    if (this.afk) {
-      this.afkButton.style.backgroundColor = "green";
-    } else {
-      this.afkButton.style.backgroundColor = "red";
-    }
-  }
- async afkHandler() {
-    // console.log(this)
-    if (this.afk && this.currentPlayer === this.myPlayerIndex) {
-      document.getElementById("roll").checked = true;
-    //   document.querySelector("#modal-buttons-container button").disabled = true;
-    //   document.querySelector("#modal-buttons-container button").innerText =
-    //     "Auto roll...";
+//     if (this.afk) {
+//       this.afkButton.style.backgroundColor = "green";
+//     } else {
+//       this.afkButton.style.backgroundColor = "red";
+//     }
+//   }
+//  async afkHandler() {
+//     // console.log(this)
+//     if (this.afk && this.currentPlayer === this.myPlayerIndex) {
+//       document.getElementById("roll").checked = true;
+//     //   document.querySelector("#modal-buttons-container button").disabled = true;
+//     //   document.querySelector("#modal-buttons-container button").innerText =
+//     //     "Auto roll...";
 
-      this.audioManager.play("dice");
-    await this.onDiceRolled();
-    await this.cancelDecision();
-      this.socket.onmessage =  (event) => {
-        const message = JSON.parse(event.data);
-        if(message.action==='roll')
-       this.handleRollRes(message);
-       if(message.action==='canel_change')
-       this.handleCancel(message);
+//       this.audioManager.play("dice");
+//     await this.onDiceRolled();
+//     await this.cancelDecision();
+//       this.socket.onmessage =  (event) => {
+//         const message = JSON.parse(event.data);
+//         if(message.action==='roll')
+//        this.handleRollRes(message);
+//        if(message.action==='canel_change')
+//        this.handleCancel(message);
 
-      };
+//       };
      
-    }
-  }
+//     }
+//   }
 
   /*
    * Init game status, called after ws.connect
