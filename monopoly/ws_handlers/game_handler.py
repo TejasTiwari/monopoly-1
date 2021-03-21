@@ -262,7 +262,7 @@ def handle_end_game(hostname, games):
     print(game)
     players = game.get_players()
     all_asset = []
-      
+    asset_dicts = []
     curr_player = game.get_current_player().get_index()
     for player in players:
         asset_dicts.append((player, player.get_asset()))
@@ -272,6 +272,7 @@ def handle_end_game(hostname, games):
     winning_asset = asset_dicts[0][1]
     for info in asset_dicts:
         if info[1] == winning_asset:
+            print(User.objects.all(), info)
             profile_user = User.objects.get(username=info[0])
             try:
                 profile = Profile.objects.get(user=profile_user)

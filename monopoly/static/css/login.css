@@ -10,6 +10,23 @@
     color: #0084ff;
     font-size: 22px;
 }
+.welcome h1{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+.welcome h1 {
+    animation: mymove 5s infinite;
+  }
+  
+  @keyframes mymove {
+    0% {color: red;}
+    30% {color: yellow;}
+    60% {color: greenyellow;}
+    100% {color: blue;}
+  }
 
 input {
     border: none;

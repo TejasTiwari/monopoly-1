@@ -13,32 +13,11 @@
         <div class="card-blur"></div>
     </div>
     <div class="card-content-container">
-        <form id="form-container" class="center" method="POST">
-            {% csrf_token %}
-            <span id="login-title">{{active_page}} to Monopoly</span>
-            {% if error %}
-                <span id="login-error" class="card"> {{error}} </span>
-            {% endif %}
-            {% if active_page == "register" %}
-            <div id="login-name-group">
-                <input name="firstname" id="login-first-name" placeholder="First Name"/>
-                <input name="lastname" id="login-last-name" placeholder="Last Name"/>
-            </div>
-            <input name="email" type="email" id="login-email" placeholder="Email"/>
-            {% endif %}
-            <input name="username" id="login-user-name" placeholder="User Name"/>
-            <input name="password" type="password" id="login-password" placeholder="Password"/>
-            <button type="submit" id="login-submit" class="large-button">{{active_page}}</button>
-        </form>
-        <span id="login-switch" class="card">
-            {% if active_page == "register" %}
-            Already Signed Up? &nbsp;
-            <a href="/monopoly/login">Log Into Existing Account</a>
-            {% else %}
-            New Here? &nbsp;
-            <a href="/monopoly/register">Create New Account</a>
-            {% endif %}
-        </span>
+      <div class="welcome">
+        <h1>
+            Welcome to MonoPilani!  
+        </h1>  
+      </div>
        <span id = "google-login"> 
         <a href="{% url "social:begin" "google-oauth2" %}" align="center"> <img  src='/static/images/google_logo.png' width="50px" /> Login with Google</a></span>
     </div>

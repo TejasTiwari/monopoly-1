@@ -57,7 +57,6 @@ class GameView {
     this.$modalTitle = document.getElementById("modal-title");
     this.$modalSubTitle = document.getElementById("modal-subtitle");
 
-    document.getElementById("trade").style.display = "none";
 
     this.showModal(
       null,
@@ -129,10 +128,7 @@ class GameView {
       'cancel_decision': this.handleCancel,
       'game_end': this.handleGameEnd,
       'chat': this.handleChat,
-      'trade': this.handleTrade,
-      "propose": this.proposeTradeHandler,
-      'accept': this.acceptTradeHandler,
-      'reject': this.rejectTradeHandler,
+     
     };
 
     // console.log(message.action)
@@ -303,10 +299,7 @@ class GameView {
                 onDiceRolled();
               },
             },
-            {
-              text: "Trade",
-              callback: this.trade.bind(this),
-            },
+          
           ];
     // (nextPlayer === this.myPlayerIndex && this.afk)
     //   ? this.afkHandler()
@@ -459,10 +452,7 @@ class GameView {
                 text: "No",
                 callback: this.cancelDecision.bind(this),
               },
-              {
-                text: "Trade",
-                callback: this.trade.bind(this),
-              }
+              
             ]
           : [];
       eventMsg = this.players[nextPlayer].userName + " " + eventMsg;
@@ -482,99 +472,99 @@ class GameView {
     window.location = `http://${window.location.host}/monopoly/join`;
   }
 
-  async proposeTrade(
-    currentPlayer,
-    playerSelected,
-    propertyGivenIndex,
-    propertyTakenIndex,
-    moneyGiven,
-    moneyTaken,
+  // async proposeTrade(
+  //   currentPlayer,
+  //   playerSelected,
+  //   propertyGivenIndex,
+  //   propertyTakenIndex,
+  //   moneyGiven,
+  //   moneyTaken,
    
-  ) {
+  // ) {
    
-    this.socket.send(
-      JSON.stringify({
-        action: "propose",
-        hostname: this.hostName,
-        currentPlayer,
-        playerSelected,
-        propertyGivenIndex,
-        propertyTakenIndex,
-        moneyGiven,
-        moneyTaken,
+  //   this.socket.send(
+  //     JSON.stringify({
+  //       action: "propose",
+  //       hostname: this.hostName,
+  //       currentPlayer,
+  //       playerSelected,
+  //       propertyGivenIndex,
+  //       propertyTakenIndex,
+  //       moneyGiven,
+  //       moneyTaken,
        
-      })
-    );
-  }
-  proposeTradeHandler(message) {
+  //     })
+  //   );
+  // }
+  // proposeTradeHandler(message) {
    
-    let {
-      initiator,
-      acceptor,
-      propertyGiven,
-      moneyGiven,
-      moneyTaken,
-      propertyTaken,
-    } = message;
-    if (acceptor === this.myPlayerIndex) {
-      document.getElementById("trade").style.display = "unset";
-      document.getElementsByClassName(
-        "card-content-container"
-      )[0].style.display = "none";
-      document.getElementById("proposetradebutton").style.display = "none";
-      document.getElementById("canceltradebutton").style.display = "none";
-      document.getElementById("trade-leftp-name").innerText = this.players[
-        initiator
-      ].fullName;
-      document.getElementById("trade-rightp-name").innerText = this.players[
-        acceptor].fullName;
-      document.getElementById("trade-leftp-money").disabled = true;
-      document
-        .getElementById("trade-leftp-money")
-        .setAttribute("value", moneyGiven);
-      document.getElementById("trade-rightp-money").disabled = true;
-      document
-        .getElementById("trade-rightp-money")
-        .setAttribute("value", moneyTaken);
-      document.getElementById("trade-leftp-property").innerHTML = propertyGiven;
-      document.getElementById(
-        "trade-rightp-property"
-      ).innerHTML = propertyTaken;
-      const acceptTrade = document.getElementById("accepttradebutton");
-      acceptTrade.style.display = "";
-      acceptTrade.onclick = () => {
-        if(acceptor===this.myPlayerIndex){
-          document.getElementsByClassName(
-              "card-content-container"
-            )[0].style.display = "";
-            document.getElementsByClassName(
-              "card-blur-container"
-            )[0].style.display = "";
-            document.getElementById("trade").style.display = "none";
-        }
+  //   let {
+  //     initiator,
+  //     acceptor,
+  //     propertyGiven,
+  //     moneyGiven,
+  //     moneyTaken,
+  //     propertyTaken,
+  //   } = message;
+  //   if (acceptor === this.myPlayerIndex) {
+  //     document.getElementById("trade").style.display = "unset";
+  //     document.getElementsByClassName(
+  //       "card-content-container"
+  //     )[0].style.display = "none";
+  //     document.getElementById("proposetradebutton").style.display = "none";
+  //     document.getElementById("canceltradebutton").style.display = "none";
+  //     document.getElementById("trade-leftp-name").innerText = this.players[
+  //       initiator
+  //     ].fullName;
+  //     document.getElementById("trade-rightp-name").innerText = this.players[
+  //       acceptor].fullName;
+  //     document.getElementById("trade-leftp-money").disabled = true;
+  //     document
+  //       .getElementById("trade-leftp-money")
+  //       .setAttribute("value", moneyGiven);
+  //     document.getElementById("trade-rightp-money").disabled = true;
+  //     document
+  //       .getElementById("trade-rightp-money")
+  //       .setAttribute("value", moneyTaken);
+  //     document.getElementById("trade-leftp-property").innerHTML = propertyGiven;
+  //     document.getElementById(
+  //       "trade-rightp-property"
+  //     ).innerHTML = propertyTaken;
+  //     const acceptTrade = document.getElementById("accepttradebutton");
+  //     acceptTrade.style.display = "";
+  //     acceptTrade.onclick = () => {
+  //       if(acceptor===this.myPlayerIndex){
+  //         document.getElementsByClassName(
+  //             "card-content-container"
+  //           )[0].style.display = "";
+  //           document.getElementsByClassName(
+  //             "card-blur-container"
+  //           )[0].style.display = "";
+  //           document.getElementById("trade").style.display = "none";
+  //       }
 
-        this.acceptTrade( initiator,
-          acceptor,
-          propertyGiven,
-          moneyGiven,
-          moneyTaken,
-          propertyTaken
-        );
-      } 
+  //       this.acceptTrade( initiator,
+  //         acceptor,
+  //         propertyGiven,
+  //         moneyGiven,
+  //         moneyTaken,
+  //         propertyTaken
+  //       );
+  //     } 
 
 
-      const rejectTrade = document.getElementById("rejecttradebutton");
-      rejectTrade.style.display = "";
-      rejectTrade.onclick = reject_trade.bind(this);
-      function reject_trade() {
-        if (acceptor === this.myPlayerIndex) {
-          document.getElementById("trade").style.display = "none";
-          document.getElementsByClassName(
-            "card-content-container"
-          )[0].style.display = "";
+  //     const rejectTrade = document.getElementById("rejecttradebutton");
+  //     rejectTrade.style.display = "";
+  //     rejectTrade.onclick = reject_trade.bind(this);
+  //     function reject_trade() {
+  //       if (acceptor === this.myPlayerIndex) {
+  //         document.getElementById("trade").style.display = "none";
+  //         document.getElementsByClassName(
+  //           "card-content-container"
+  //         )[0].style.display = "";
          
-          this.reject(initiator, acceptor);
-        }
+  //         this.reject(initiator, acceptor);
+  //       }
 
         //  if (initiator === this.myPlayerIndex) {
         //   console.log(initiator);
@@ -592,301 +582,301 @@ class GameView {
         //     []
         //   );
         // }
-      }
-    }
-    if (initiator === this.myPlayerIndex) {
-        document.getElementsByClassName(
-            "card-content-container"
-          )[0].style.display = "none";
-        document.getElementsByClassName(
-            "card-blur-container"
-          )[0].style.display = "none";
-      let div = document.createElement("div");
-      div.setAttribute("id", "waitTrade");
-      div.innerHTML = `<h3>Awaiting players</h4>`;
-      let trade = document.getElementById("trade");
-      trade.before(div);
+  //     }
+  //   }
+  //   if (initiator === this.myPlayerIndex) {
+  //       document.getElementsByClassName(
+  //           "card-content-container"
+  //         )[0].style.display = "none";
+  //       document.getElementsByClassName(
+  //           "card-blur-container"
+  //         )[0].style.display = "none";
+  //     let div = document.createElement("div");
+  //     div.setAttribute("id", "waitTrade");
+  //     div.innerHTML = `<h3>Awaiting players</h4>`;
+  //     let trade = document.getElementById("trade");
+  //     trade.before(div);
 
-    } if(initiator !== this.myPlayerIndex && acceptor !== this.myPlayerIndex)
-     {this.showModal(
-        initiator,
-        this.players[initiator].fullName +
-          "trading with " +
-          this.players[acceptor].fullName,
-        "Please wait",
-        "",
-        []
-      );}
-  }
+  //   } if(initiator !== this.myPlayerIndex && acceptor !== this.myPlayerIndex)
+  //    {this.showModal(
+  //       initiator,
+  //       this.players[initiator].fullName +
+  //         "trading with " +
+  //         this.players[acceptor].fullName,
+  //       "Please wait",
+  //       "",
+  //       []
+  //     );}
+  // }
 
-  acceptTradeHandler(message) {
+  // acceptTradeHandler(message) {
      
-    document.getElementById("trade").style.display = "none";
-        // table display none
-        // modal display ""
-        this.changeCashAmount(message.updatedPlayersCash)
+  //   document.getElementById("trade").style.display = "none";
+  //       // table display none
+  //       // modal display ""
+  //       this.changeCashAmount(message.updatedPlayersCash)
        
-      //  for(let i = 0 ; i<message.propertyGivenIndex.length;i++){
+  //     //  for(let i = 0 ; i<message.propertyGivenIndex.length;i++){
          
-      //    this.gameController.addProperty(
-      //      PropertyManager.PROPERTY_OWNER_MARK,
-      //      message.propertyGivenIndex[i],
-      //      message.acceptor
-      //    );
-      //   }
-      //  for(let i = 0 ; i<message.propertyTakenIndex.length;i++){
+  //     //    this.gameController.addProperty(
+  //     //      PropertyManager.PROPERTY_OWNER_MARK,
+  //     //      message.propertyGivenIndex[i],
+  //     //      message.acceptor
+  //     //    );
+  //     //   }
+  //     //  for(let i = 0 ; i<message.propertyTakenIndex.length;i++){
 
-      //   this.gameController.removeProperty(
-      //    PropertyManager.PROPERTY_OWNER_MARK,
-      //    message.propertyTakenIndex[i],
+  //     //   this.gameController.removeProperty(
+  //     //    PropertyManager.PROPERTY_OWNER_MARK,
+  //     //    message.propertyTakenIndex[i],
          
-      //    message.initiator
-      //  );
-      // }
-        if(message.initiator===this.myPlayerIndex){
-            document.getElementsByClassName(
-                "card-content-container"
-              )[0].style.display = "none";
-            document.getElementsByClassName(
-                "card-blur-container"
-              )[0].style.display = "none";
-         document.getElementById('waitTrade').innerHTML=`<h4>Trade Accepted</h4>`
-         setTimeout(()=>{
-            document.getElementById("waitTrade").remove();
-            document.getElementsByClassName(
-                "card-content-container"
-              )[0].style.display = "";
-              document.getElementsByClassName(
-                "card-blur-container"
-              )[0].style.display = "";
-         },2000)
-        }
+  //     //    message.initiator
+  //     //  );
+  //     // }
+  //       if(message.initiator===this.myPlayerIndex){
+  //           document.getElementsByClassName(
+  //               "card-content-container"
+  //             )[0].style.display = "none";
+  //           document.getElementsByClassName(
+  //               "card-blur-container"
+  //             )[0].style.display = "none";
+  //        document.getElementById('waitTrade').innerHTML=`<h4>Trade Accepted</h4>`
+  //        setTimeout(()=>{
+  //           document.getElementById("waitTrade").remove();
+  //           document.getElementsByClassName(
+  //               "card-content-container"
+  //             )[0].style.display = "";
+  //             document.getElementsByClassName(
+  //               "card-blur-container"
+  //             )[0].style.display = "";
+  //        },2000)
+  //       }
 
-  }
+  // }
   
-  acceptTrade( initiator,
-    acceptor,
-    propertyGiven,
-    moneyGiven,
-    moneyTaken,
-    propertyTaken,) {
+  // acceptTrade( initiator,
+  //   acceptor,
+  //   propertyGiven,
+  //   moneyGiven,
+  //   moneyTaken,
+  //   propertyTaken,) {
        
-    this.socket.send(
-      JSON.stringify({
-        action: "accept",
-    initiator,
-        acceptor,
-        propertyGiven,
-        moneyGiven,
-        moneyTaken,
-        propertyTaken,
-        hostname: this.hostName,
-      })
-    );
-  }
+  //   this.socket.send(
+  //     JSON.stringify({
+  //       action: "accept",
+  //   initiator,
+  //       acceptor,
+  //       propertyGiven,
+  //       moneyGiven,
+  //       moneyTaken,
+  //       propertyTaken,
+  //       hostname: this.hostName,
+  //     })
+  //   );
+  // }
 
-  rejectTradeHandler(message){
+  // rejectTradeHandler(message){
    
-    if(this.myPlayerIndex===message.initiator){
-      let div = document.getElementById("waitTrade");
-      div.remove();
-      document.getElementsByClassName("card-content-container")[0].style.display = "";
-      document.getElementsByClassName("card-blur-container")[0].style.display = "";
-    }  
-    if(message.initiator !== this.myPlayerIndex && message.acceptor !== this.myPlayerIndex) {
-        // div vala logic, and disp modal
-    //   this.showModal(
-    //     message.initiator,
-    //     this.players[message.initiator].fullName +
-    //       "trading with " +
-    //       this.players[message.acceptor].fullName,
-    //     "Please wait",
-    //     "",
-    //     []
-    //   );
-    }  
-  }
+  //   if(this.myPlayerIndex===message.initiator){
+  //     let div = document.getElementById("waitTrade");
+  //     div.remove();
+  //     document.getElementsByClassName("card-content-container")[0].style.display = "";
+  //     document.getElementsByClassName("card-blur-container")[0].style.display = "";
+  //   }  
+  //   if(message.initiator !== this.myPlayerIndex && message.acceptor !== this.myPlayerIndex) {
+  //       // div vala logic, and disp modal
+  //   //   this.showModal(
+  //   //     message.initiator,
+  //   //     this.players[message.initiator].fullName +
+  //   //       "trading with " +
+  //   //       this.players[message.acceptor].fullName,
+  //   //     "Please wait",
+  //   //     "",
+  //   //     []
+  //   //   );
+  //   }  
+  // }
 
-  handleTrade(message) {
+  // handleTrade(message) {
 
    
-    if (this.myPlayerIndex === this.currentPlayer) {
-      document.getElementById("trade").style.display = "unset";
-      document.getElementsByClassName(
-        "card-content-container"
-      )[0].style.display = "none";
-      document.getElementById("accepttradebutton").style.display = "none";
-      document.getElementById("rejecttradebutton").style.display = "none";
+  //   if (this.myPlayerIndex === this.currentPlayer) {
+  //     document.getElementById("trade").style.display = "unset";
+  //     document.getElementsByClassName(
+  //       "card-content-container"
+  //     )[0].style.display = "none";
+  //     document.getElementById("accepttradebutton").style.display = "none";
+  //     document.getElementById("rejecttradebutton").style.display = "none";
 
-      document.getElementById('close-trade').onclick=stopTrade.bind(this);
-    }
+  //     document.getElementById('close-trade').onclick=stopTrade.bind(this);
+  //   }
 
     
-    let proposeTrade = document.getElementById("proposetradebutton");
-    let cancelTrade = document.getElementById("canceltradebutton");
-    document.getElementById("trade-leftp-name").innerText = this.players[
-      this.currentPlayer
-    ].fullName;
-    // const that = this
-    function startTrade() {
-      let currentPlayer = this.currentPlayer;
-      let playerSelected = playerSelectedIndex;
-      // document.getElementById('accepttradebutton').style.display = '';
-      // document.getElementById('rejecttradebutton').style.display = '';
-      document.getElementById("proposetradebutton").disabled = "";
-      document.getElementById("proposetradebutton").textContent =
-        "Trade Proposed";
-      //
-      //
-      let moneyGiven = document.getElementById("trade-leftp-money").value;
-      let moneyTaken = document.getElementById("trade-rightp-money").value;
+  //   let proposeTrade = document.getElementById("proposetradebutton");
+  //   let cancelTrade = document.getElementById("canceltradebutton");
+  //   document.getElementById("trade-leftp-name").innerText = this.players[
+  //     this.currentPlayer
+  //   ].fullName;
+  //   // const that = this
+  //   function startTrade() {
+  //     let currentPlayer = this.currentPlayer;
+  //     let playerSelected = playerSelectedIndex;
+  //     // document.getElementById('accepttradebutton').style.display = '';
+  //     // document.getElementById('rejecttradebutton').style.display = '';
+  //     document.getElementById("proposetradebutton").disabled = "";
+  //     document.getElementById("proposetradebutton").textContent =
+  //       "Trade Proposed";
+  //     //
+  //     //
+  //     let moneyGiven = document.getElementById("trade-leftp-money").value;
+  //     let moneyTaken = document.getElementById("trade-rightp-money").value;
 
-      let propertyGivableIndex = document.getElementsByClassName("leftp-check");
-      let propertyGivenIndex = [];
-      for (let i = 0; i < propertyGivableIndex.length; i++) {
-        if (propertyGivableIndex[i].checked === true) {
-          propertyGivenIndex.push(propertyGivableIndex[i].value);
-        }
-      }
-      let propertyTakeableIndex = document.getElementsByClassName(
-        "rightp-check"
-      );
-      let propertyTakenIndex = [];
-      for (let i = 0; i < propertyTakeableIndex.length; i++) {
-        if (propertyTakeableIndex[i].checked === true) {
-          propertyTakenIndex.push(propertyTakeableIndex[i].value);
-        }
-      }
+  //     let propertyGivableIndex = document.getElementsByClassName("leftp-check");
+  //     let propertyGivenIndex = [];
+  //     for (let i = 0; i < propertyGivableIndex.length; i++) {
+  //       if (propertyGivableIndex[i].checked === true) {
+  //         propertyGivenIndex.push(propertyGivableIndex[i].value);
+  //       }
+  //     }
+  //     let propertyTakeableIndex = document.getElementsByClassName(
+  //       "rightp-check"
+  //     );
+  //     let propertyTakenIndex = [];
+  //     for (let i = 0; i < propertyTakeableIndex.length; i++) {
+  //       if (propertyTakeableIndex[i].checked === true) {
+  //         propertyTakenIndex.push(propertyTakeableIndex[i].value);
+  //       }
+  //     }
       
-      document.getElementsByClassName(
-        "card-content-container"
-      )[0].style.display = "";
-      // this.showModal(currentPlayer, this.players[playerSelected].fullName + ' is deciding...', 'Please wait.','' , [] )
+  //     document.getElementsByClassName(
+  //       "card-content-container"
+  //     )[0].style.display = "";
+  //     // this.showModal(currentPlayer, this.players[playerSelected].fullName + ' is deciding...', 'Please wait.','' , [] )
 
-      document.getElementById("trade").style.display = "none";
-      this.proposeTrade(
-        currentPlayer,
-        playerSelected,
-        propertyGivenIndex,
-        propertyTakenIndex,
-        moneyGiven,
-        moneyTaken
-      );
+  //     document.getElementById("trade").style.display = "none";
+  //     this.proposeTrade(
+  //       currentPlayer,
+  //       playerSelected,
+  //       propertyGivenIndex,
+  //       propertyTakenIndex,
+  //       moneyGiven,
+  //       moneyTaken
+  //     );
 
-      //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
-    }
+  //     //  this.tradeSocket = new WebSocket(`ws://${window.location.host}/game/${this.hostName}`)
+  //   }
 
-    function stopTrade() {
-      document.getElementById("trade").style.display = "none";
-      document.getElementsByClassName(
-        "card-content-container"
-      )[0].style.display = "inherit";
-    }
+  //   function stopTrade() {
+  //     document.getElementById("trade").style.display = "none";
+  //     document.getElementsByClassName(
+  //       "card-content-container"
+  //     )[0].style.display = "inherit";
+  //   }
 
-    proposeTrade.onclick = startTrade.bind(this);
-    cancelTrade.onclick = stopTrade.bind(this);
-    let currentPlayer = this.currentPlayer;
+  //   proposeTrade.onclick = startTrade.bind(this);
+  //   cancelTrade.onclick = stopTrade.bind(this);
+  //   let currentPlayer = this.currentPlayer;
 
-    let dropdown = [];
-    for (let i = 0; i < message.players_info.length; i++) {
-      if (i !== this.myPlayerIndex) {
-        dropdown.push(this.players[i].fullName);
-      }
-    }
+  //   let dropdown = [];
+  //   for (let i = 0; i < message.players_info.length; i++) {
+  //     if (i !== this.myPlayerIndex) {
+  //       dropdown.push(this.players[i].fullName);
+  //     }
+  //   }
     
-    let select = document.getElementById('select')
-    if (!select) {
-      select = document.createElement("select");
-      select.setAttribute("id", "select")
-    }
+  //   let select = document.getElementById('select')
+  //   if (!select) {
+  //     select = document.createElement("select");
+  //     select.setAttribute("id", "select")
+  //   }
     
-    document.getElementById('trade-rightp-name').append(select)
-    for (let i = 0; i < dropdown.length && dropdown[i] !== -1; i++) {
-      let option = document.createElement("option");
-      option.innerHTML = dropdown[i];
-      select.append(option);
-    }
+  //   document.getElementById('trade-rightp-name').append(select)
+  //   for (let i = 0; i < dropdown.length && dropdown[i] !== -1; i++) {
+  //     let option = document.createElement("option");
+  //     option.innerHTML = dropdown[i];
+  //     select.append(option);
+  //   }
 
-    let playerSelected = document.getElementById("select").value;
-    let playerSelectedIndex = null;
-    this.players.find((item, index) => {
-      if (playerSelected === item.fullName) {
-        playerSelectedIndex = index;
-        return true;
-      }
-    })[0];
+  //   let playerSelected = document.getElementById("select").value;
+  //   let playerSelectedIndex = null;
+  //   this.players.find((item, index) => {
+  //     if (playerSelected === item.fullName) {
+  //       playerSelectedIndex = index;
+  //       return true;
+  //     }
+  //   })[0];
     
 
-    let propertyCurrPlayer = [];
-    let propertyRequestedPlayer = [];
-    for (let i = 0; i < 40; i++) {
-      if (message.players_info[0].owners[i] === currentPlayer) {
+  //   let propertyCurrPlayer = [];
+  //   let propertyRequestedPlayer = [];
+  //   for (let i = 0; i < 40; i++) {
+  //     if (message.players_info[0].owners[i] === currentPlayer) {
       
-        propertyCurrPlayer.push(i);
+  //       propertyCurrPlayer.push(i);
 
-      }
-      if (message.players_info[0].owners[i] === playerSelectedIndex)
-        propertyRequestedPlayer.push(i);
-    }
-    // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
+  //     }
+  //     if (message.players_info[0].owners[i] === playerSelectedIndex)
+  //       propertyRequestedPlayer.push(i);
+  //   }
+  //   // let propertyRequestedPlayer = message.players_info[0].owners.filter((item) => item === playerSelectedIndex);
     
 
-    let table1 = document.createElement("table");
-    let table2 = document.createElement("table");
-    table1.style.display = "inline-block";
-    table1.style.display = "inline-block";
-    let table_1 = document.getElementById("trade-leftp-property");
-    let table_2 = document.getElementById("trade-rightp-property");
-    table_1.innerHTML=''
-    table_2.innerHTML=''
-    table_1.append(table1);
-    table_2.append(table2);
+  //   let table1 = document.createElement("table");
+  //   let table2 = document.createElement("table");
+  //   table1.style.display = "inline-block";
+  //   table1.style.display = "inline-block";
+  //   let table_1 = document.getElementById("trade-leftp-property");
+  //   let table_2 = document.getElementById("trade-rightp-property");
+  //   table_1.innerHTML=''
+  //   table_2.innerHTML=''
+  //   table_1.append(table1);
+  //   table_2.append(table2);
 
-    for (let i = 0; i < propertyCurrPlayer.length; i++) {
-      let tr = document.createElement("tr");
-      table1.append(tr);
-      let td1 = document.createElement("td");
-      let td2 = document.createElement("td");
-      let input = document.createElement("input");
-      input.setAttribute("class", "leftp-check");
-      let propertyLabel = this.modalData[propertyCurrPlayer[i]].name;
+  //   for (let i = 0; i < propertyCurrPlayer.length; i++) {
+  //     let tr = document.createElement("tr");
+  //     table1.append(tr);
+  //     let td1 = document.createElement("td");
+  //     let td2 = document.createElement("td");
+  //     let input = document.createElement("input");
+  //     input.setAttribute("class", "leftp-check");
+  //     let propertyLabel = this.modalData[propertyCurrPlayer[i]].name;
      
-      input.setAttribute("value", propertyLabel);
-      input.setAttribute("type", "checkbox");
+  //     input.setAttribute("value", propertyLabel);
+  //     input.setAttribute("type", "checkbox");
 
-      // input.setAttribute('value', propertyCurrPlayer[i]);
-      let label = document.createElement("label");
-      label.innerText = propertyLabel
+  //     // input.setAttribute('value', propertyCurrPlayer[i]);
+  //     let label = document.createElement("label");
+  //     label.innerText = propertyLabel
 
-      input.style.display = "unset";
-      td1.append(input);
-      td1.append(label);
-      // td2.append(propertyCurrPlayer[i]);
-      tr.append(td1);
-    }
+  //     input.style.display = "unset";
+  //     td1.append(input);
+  //     td1.append(label);
+  //     // td2.append(propertyCurrPlayer[i]);
+  //     tr.append(td1);
+  //   }
 
-    for (let i = 0; i < propertyRequestedPlayer.length; i++) {
-      let tr = document.createElement("tr");
-      table2.append(tr);
-      let td1 = document.createElement("td");
-      let td2 = document.createElement("td");
-      let input = document.createElement("input");
-      input.setAttribute("class", "rightp-check");
-      let propertyLabel = this.modalData[propertyRequestedPlayer[i]].name;
+  //   for (let i = 0; i < propertyRequestedPlayer.length; i++) {
+  //     let tr = document.createElement("tr");
+  //     table2.append(tr);
+  //     let td1 = document.createElement("td");
+  //     let td2 = document.createElement("td");
+  //     let input = document.createElement("input");
+  //     input.setAttribute("class", "rightp-check");
+  //     let propertyLabel = this.modalData[propertyRequestedPlayer[i]].name;
      
-      input.setAttribute("value", propertyLabel);
+  //     input.setAttribute("value", propertyLabel);
       
-      input.style.display = "unset";
-      input.setAttribute("type", "checkbox");
-      // input.setAttribute('value', propertyRequestedPlayer[i]);
-      let label = document.createElement("label");
-      label.innerText = propertyLabel;
-      td1.append(input);
-      td1.append(label);
-      // td2.append(propertyLabel);
-      tr.append(td1);
-    }
-  }
+  //     input.style.display = "unset";
+  //     input.setAttribute("type", "checkbox");
+  //     // input.setAttribute('value', propertyRequestedPlayer[i]);
+  //     let label = document.createElement("label");
+  //     label.innerText = propertyLabel;
+  //     td1.append(input);
+  //     td1.append(label);
+  //     // td2.append(propertyLabel);
+  //     tr.append(td1);
+  //   }
+  // }
   async handleRollRes(message) {
     let currPlayer = message.curr_player;
     let nextPlayer = message.next_player;
@@ -907,7 +897,7 @@ class GameView {
       "",
       "",
       [],
-      2
+      5
     );
 
     await this.gameController.movePlayer(currPlayer, newPos);
@@ -928,7 +918,7 @@ class GameView {
         "Start point",
         eventMsg,
         [],
-        2
+        5
       );
     }
 
@@ -944,10 +934,10 @@ class GameView {
                 text: "No",
                 callback: this.cancelDecision.bind(this),
               },
-              {
-                text: "Trade",
-                callback: this.trade.bind(this),
-              },
+              // {
+              //   text: "Trade",
+              //   callback: this.trade.bind(this),
+              // },
             ]
           : [];
 
@@ -966,7 +956,7 @@ class GameView {
           landname,
           this.players[currPlayer].userName + eventMsg,
           [],
-          3
+          5
         );
         let cash = message.curr_cash;
         this.changeCashAmount(cash);
@@ -979,7 +969,7 @@ class GameView {
           landname,
           this.players[currPlayer].userName + eventMsg,
           [],
-          3
+          5
         );
         this.changePlayer(nextPlayer, this.onDiceRolled.bind(this));
       } else {
@@ -1069,14 +1059,14 @@ class GameView {
     await this.hideModal(true);
   }
 
-  async trade() {
-    this.socket.send(
-      JSON.stringify({
-        action: "trade",
-        hostname: this.hostName,
-      })
-    );
-  }
+  // async trade() {
+  //   this.socket.send(
+  //     JSON.stringify({
+  //       action: "trade",
+  //       hostname: this.hostName,
+  //     })
+  //   );
+  // }
   async cancelDecision() {
     this.socket.send(
       JSON.stringify({
