@@ -135,7 +135,7 @@ class GameView {
       'reject': this.rejectTradeHandler,
     };
 
-    console.log(message.action)
+    // console.log(message.action)
 
     if (!this.gameInProcess) return;
 
@@ -197,6 +197,7 @@ class GameView {
    * */
   initPlayers(players, initPos) {
     this.players = players;
+    
     this.currentPlayer = null;
 
     for (let i = 0; i < players.length; i++) {
@@ -242,7 +243,7 @@ class GameView {
    * */
   changePlayer(nextPlayer, onDiceRolled) {
     let tradeView;
-    console.log(this, nextPlayer);
+    // console.log(this, nextPlayer);
     // update user indicator
     if (this.currentPlayer !== null) {
       let $currentUserGroup = document.getElementById(
