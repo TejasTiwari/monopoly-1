@@ -1,13 +1,6 @@
-{% extends "base.html" %}
-{% load static %}
 
-{% block title %} Monopoly {% endblock %}
-
-{% block files %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
-{% endblock %}
 
-{% block content %}
 <div id="login-container" class="card">
     <div class="card-blur-container">
         <div class="card-blur"></div>
@@ -22,4 +15,15 @@
         <a href="{% url "social:begin" "google-oauth2" %}" align="center"> <img  src='/static/images/google_logo.png' width="50px" /> Login with Google</a></span>
     </div>
 </div>
-{% endblock %}
+<div id= "footer">
+    <div id= "sponsors-container">
+        <div class="logo-container">
+            <a href="https://www.soundideazacademy.in/"><img width="250px"  src= "/static/images/sound.png"></a>
+            <h3>Title Sponsor</h4>
+        </div>
+        <div class= "logo-container">
+            <a href="https://www.fablabs.in/"><img width="250px" src= "/static/images/fab.png"></a>
+            <h3>Associate Title Sponsor</h4>
+        </div>
+    </div>
+</div>
